@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        //loading page
         <LinearLayout
             android:id="@+id/loadView"
             android:layout_width="match_parent"
@@ -87,6 +88,7 @@
             </LinearLayout>
         </LinearLayout>
 
+        //main page
         <LinearLayout
             android:id="@+id/mainView"
             android:layout_width="match_parent"
@@ -232,6 +234,7 @@
             </LinearLayout>
         </LinearLayout>
 
+        //관심기업,산업군 설정 page
         <LinearLayout
             android:id="@+id/favoriteView"
             android:layout_width="match_parent"
