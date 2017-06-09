@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     // 4 : myScrapView;
     // 5 : myReplyView;
     // 6 : pushSettingView;
+    // 7 : specificView
+    // 8 : companyView
     ActionBar actionBar;
 
     @Override
@@ -36,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         views.add((LinearLayout) findViewById(R.id.myScrapView));
         views.add((LinearLayout) findViewById(R.id.myReplyView));
         views.add((LinearLayout) findViewById(R.id.pushSettingView));
+        views.add((LinearLayout) findViewById(R.id.specificView));
+        views.add((LinearLayout) findViewById(R.id.companyView));
 
         Button nickCheckBtn = (Button) findViewById(R.id.nickCheckBtn);
         nickCheckBtn.setOnClickListener(new View.OnClickListener() {
@@ -93,12 +97,12 @@ public class MainActivity extends AppCompatActivity {
         showView(3);
 //        actionBar.setDisplayHomeAsUpEnabled(true);
 
-        Button test = (Button) findViewById(R.id.actionBarTitle);
-        test.setText("지니님의 마이페이지");
-        Button actionBarLeft = (Button) findViewById(R.id.actionBarLeft);
-        actionBarLeft.setVisibility(View.INVISIBLE);
-        Button actionBarRight = (Button) findViewById(R.id.actionBarRight);
-        actionBarRight.setVisibility(View.INVISIBLE);
+//        Button test = (Button) findViewById(R.id.actionBarTitle);
+//        test.setText("지니님의 마이페이지");
+//        Button actionBarLeft = (Button) findViewById(R.id.actionBarLeft);
+//        actionBarLeft.setVisibility(View.INVISIBLE);
+//        Button actionBarRight = (Button) findViewById(R.id.actionBarRight);
+//        actionBarRight.setVisibility(View.INVISIBLE);
     }
 
     //마이페이지 -> '나의 스크랩' 페이지로 이동
