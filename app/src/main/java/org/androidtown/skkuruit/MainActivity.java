@@ -7,8 +7,16 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -24,7 +32,16 @@ public class MainActivity extends AppCompatActivity {
     // 6 : pushSettingView;
     // 7 : specificView
     // 8 : companyView
+    // 8 : allEventView
     ActionBar actionBar;
+
+
+    //test;
+    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    DatabaseReference databaseReference = firebaseDatabase.getReference();
+    TextView eventTitle, eventDate, eventLocation;
+    ListView listview;
+    jobEventAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +57,9 @@ public class MainActivity extends AppCompatActivity {
         views.add((LinearLayout) findViewById(R.id.pushSettingView));
         views.add((LinearLayout) findViewById(R.id.specificView));
         views.add((LinearLayout) findViewById(R.id.companyView));
+        views.add((LinearLayout) findViewById(R.id.allEventView));
 
+        EditText nickText = (EditText) findViewById(R.id.nickText);
         Button nickCheckBtn = (Button) findViewById(R.id.nickCheckBtn);
         nickCheckBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,10 +67,53 @@ public class MainActivity extends AppCompatActivity {
                 TextView nickDescription = (TextView) findViewById(R.id.nickDescription);
                 nickDescription.setText("사용 가능한 닉네임입니다.");
 //                nickDescription.setText("이미 있는 닉네임입니다.");
+
+//                tt t = new tt(nickText.getText().toString());
+//                databaseReference.child("test").push().setValue(t);
+//                nickText.setText("");
             }
         });
 
+        //for jobEventItemList view
+        adapter = new jobEventAdapter();
+        listview = (ListView) findViewById(R.id.mainListview1);
+        listview.setAdapter(adapter);
+
+        readJobEvent();
+
     }
+
+    //채용설명회 공고 읽어오기
+    private void readJobEvent() {
+        databaseReference.child("jobEvent").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                jobEvent jobevent = dataSnapshot.getValue(jobEvent.class);
+                adapter.addItem(jobevent.getTitle(), jobevent.getDate(), jobevent.getLocation());
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        }
+    );}
 
     //액션바 menu 변경
     @Override
@@ -113,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
     //마이페이지 -> '내가 댓글 단 공고' 페이지로 이동
     public void myReply(View v) {
         showView(5);
+
     }
 
     //마이페이지 -> '알림 설정' 페이지로 이동
@@ -153,5 +216,9 @@ public class MainActivity extends AppCompatActivity {
     //'나의 관심기업/산업군' 설정 페이지로 이동
     public void favoriteSetting(View v) {
         showView(2);
+    }
+
+    public void allEvent(View v) {
+        showView(9);
     }
 }
