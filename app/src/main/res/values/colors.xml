@@ -6,4 +6,6 @@
     <color name="mainColor">#FF151515</color>
     <color name="bgColor">#FFAFAFAF</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="inColor">#FF2E75B6</color>
+    <color name="jaColor">#FF00B050</color>
 </resources>

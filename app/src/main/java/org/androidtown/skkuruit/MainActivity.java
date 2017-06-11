@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -35,13 +36,11 @@ public class MainActivity extends AppCompatActivity {
     // 9 : allEventView
     ActionBar actionBar;
 
-
     //test;
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = firebaseDatabase.getReference();
-    TextView eventTitle, eventDate, eventLocation;
-    ListView listView;
-    jobEventAdapter adapter;
+    ListView mainViewList1, mainViewList2, allEventViewList;
+    jobEventAdapter adapter1, adapter2, adapterAll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,39 +66,98 @@ public class MainActivity extends AppCompatActivity {
                 TextView nickDescription = (TextView) findViewById(R.id.nickDescription);
                 nickDescription.setText("사용 가능한 닉네임입니다.");
 //                nickDescription.setText("이미 있는 닉네임입니다.");
-
-//                tt t = new tt(nickText.getText().toString());
-//                databaseReference.child("test").push().setValue(t);
-//                nickText.setText("");
             }
         });
 
-        //for jobEventItemList view
-        listView = (ListView) findViewById(R.id.mainListview1);
+        //for listview - 메인, 전체공고
+        mainViewList1 = (ListView) findViewById(R.id.mainViewList1);
+        mainViewList2 = (ListView) findViewById(R.id.mainViewList2);
+        allEventViewList = (ListView) findViewById(R.id.allEventViewList);
 
-        adapter = new jobEventAdapter();
-        listView.setAdapter(adapter);
+        adapter1 = new jobEventAdapter();
+        adapter2 = new jobEventAdapter();
+        adapterAll = new jobEventAdapter();
 
-
-//        jobEvent t = new jobEvent("abbb", "a", 1, "a");
-//        databaseReference.child("jobEvent").push().setValue(t);
-
-        adapter.addItem("abbb", "a", 1, "a");
+        mainViewList1.setAdapter(adapter1);
+        mainViewList2.setAdapter(adapter2);
+        allEventViewList.setAdapter(adapterAll);
 
         readJobEvent();
+//        getCompany();
+//        jobEvent t = new jobEvent("abbb", "a", 1, "a");
+//        databaseReference.child("jobEvent").push().setValue(t);
+//        adapter.addItem("abbb", "a", 1, "a");
+
+        //상세페이지에서 댓글 작성
+        Button cmtSendBtn = (Button) findViewById(R.id.cmtSendBtn);
+//        cmtSendBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                EditText commentInput = (EditText) findViewById(R.id.commentInput);
+//                databaseReference.push().setValue(commentInput.getText().toString());
+//            }
+//        });
     }
 
-    //채용설명회 공고 읽어오기
+    //메인페이지-전체 공고 db 읽어와 출력
+    private void readJobEventMain() {
+        //중복 방지를 위한 list 초기화
+        adapter2.clear();
+
+        //listview의 각 event 클릭 시
+        mainViewList2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                displaySpEvent(position, adapter2);
+            }
+        });
+
+        databaseReference.child("jobEvent").orderByChild("date").limitToFirst(4).addChildEventListener(new ChildEventListener() {
+              @Override
+              public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                  jobEventItem jobEventItem = dataSnapshot.getValue(jobEventItem.class);
+                  adapter2.addItem(jobEventItem.getEventTitle(), jobEventItem.getEventDate(), jobEventItem.getEventCompanyNo(), jobEventItem.getEventLocation());
+                  adapter2.notifyDataSetChanged();
+              }
+
+              @Override
+              public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+              }
+
+              @Override
+              public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+              }
+
+              @Override
+              public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+              }
+
+              @Override
+              public void onCancelled(DatabaseError databaseError) {
+
+              }
+          }
+    );}
+
+    //firebase에서 채용설명회 공고 읽어와 박스 출력
     private void readJobEvent() {
-//        databaseReference.child("jobEvent").orderByChild("date").limitToFirst(4).addChildEventListener(new ChildEventListener() {
+        //listview의 각 event 클릭 시
+        allEventViewList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                displaySpEvent(position, adapterAll);
+            }
+        });
+
         databaseReference.child("jobEvent").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                jobEventItem jobEventItem = dataSnapshot.getValue(jobEventItem.class);
-                adapter.addItem(jobEventItem.getEventTitle(), jobEventItem.getEventDate(), jobEventItem.getEventCompanyNo(), jobEventItem.getEventLocation());
-
-                adapter.notifyDataSetChanged();
+              jobEventItem jobEventItem = dataSnapshot.getValue(jobEventItem.class);
+              adapterAll.addItem(jobEventItem.getEventTitle(), jobEventItem.getEventDate(), jobEventItem.getEventCompanyNo(), jobEventItem.getEventLocation());
+              adapterAll.notifyDataSetChanged();
             }
 
             @Override
@@ -123,6 +181,98 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     );}
+
+    //각 공고 박스 클릭 -> 상세 공고 페이지로 이동
+    private void displaySpEvent(int position, jobEventAdapter adapter) {
+        TextView spEventTitle = (TextView) findViewById(R.id.spEventTitle);
+        spEventTitle.setText(adapter.getList().get(position).getEventTitle());
+
+        TextView spEventCompany = (TextView) findViewById(R.id.spEventCompany);
+        spEventCompany.setText(String.valueOf(adapter.getList().get(position).getEventCompanyNo()));
+
+        TextView spEventInfo= (TextView) findViewById(R.id.spEventInfo);
+        spEventInfo.setText(adapter.getList().get(position).getEventLocation() + " : "
+                + adapter.getList().get(position).getEventDate());
+
+        getCompany(adapter.getList().get(position).getEventCompanyNo());
+
+        showView(7);
+    }
+
+    //카테고리 읽어오기
+    private void getCategory() {
+        databaseReference.child("companyCategory").orderByChild("categoryNo").equalTo(1).addChildEventListener(new ChildEventListener() {
+              @Override
+              public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                  companyCategory companyCategory = dataSnapshot.getValue(companyCategory.class);
+
+//                  Toast.makeText(
+//                        MainActivity.this, companyCategory.getCateName(),
+//                        Toast.LENGTH_SHORT
+//                    ).show();
+              }
+
+              @Override
+              public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+              }
+
+              @Override
+              public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+              }
+
+              @Override
+              public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+              }
+
+              @Override
+              public void onCancelled(DatabaseError databaseError) {
+
+              }
+          }
+    );}
+
+    //각 공고 클릭 시 해당하는 회사 정보 가져와 출력하기
+    private void getCompany(int companyNo) {
+        databaseReference.child("company").orderByChild("companyNo").equalTo(companyNo).addChildEventListener(new ChildEventListener() {
+               @Override
+               public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                   company company = dataSnapshot.getValue(company.class);
+
+                   //산업군/필수사항/우대사항 채우기
+                   TextView spEventCate = (TextView) findViewById(R.id.spEventCate);
+                   spEventCate.setText(company.getCompanyCate());
+
+                   TextView spMust = (TextView) findViewById(R.id.spMust);
+                   spMust.setText(company.getMustQual());
+
+                   TextView spOption = (TextView) findViewById(R.id.spOption);
+                   spOption.setText(company.getOptionQual());
+               }
+
+               @Override
+               public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+               }
+
+               @Override
+               public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+               }
+
+               @Override
+               public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+               }
+
+               @Override
+               public void onCancelled(DatabaseError databaseError) {
+
+               }
+           }
+        );}
 
     //액션바 menu 변경
     @Override
@@ -219,7 +369,13 @@ public class MainActivity extends AppCompatActivity {
     //액션바 클릭 -> 메인페이지로 이동
     public void initStart(View v) {
         showView(1);
+        readJobEventMain();
         actionBar.show();
+    }
+
+    public void notFavSetting() {
+        TextView notFavMsg = (TextView) findViewById(R.id.notFavMsg);
+        notFavMsg.setVisibility(View.INVISIBLE);
     }
 
     //'나의 관심기업/산업군' 설정 페이지로 이동

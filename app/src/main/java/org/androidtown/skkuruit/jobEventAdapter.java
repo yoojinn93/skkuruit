@@ -17,9 +17,17 @@ public class jobEventAdapter extends BaseAdapter {
 
     // 아이템 데이터 리스트
     private ArrayList<jobEventItem> jobEventItemList = new ArrayList<jobEventItem>() ;
+    private Context context;
 
+    public void clear() {
+        jobEventItemList.clear();
+    }
     public jobEventAdapter() {
 
+    }
+
+    public ArrayList<jobEventItem> getList() {
+        return jobEventItemList;
     }
 
     @Override
@@ -27,11 +35,13 @@ public class jobEventAdapter extends BaseAdapter {
         return jobEventItemList.size();
     }
 
+    // Adapter가 관리하는 Data의 Item 의 Position <객체> 형태로.
     @Override
     public Object getItem(int position) {
         return jobEventItemList.get(position);
     }
 
+    // Adapter가 관리하는 Data의 Item 의 position 값의 ID
     @Override
     public long getItemId(int position) {
         return position;
@@ -39,7 +49,7 @@ public class jobEventAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final Context context = parent.getContext();
+        context = parent.getContext();
         int viewType = getItemViewType(position) ;
         jobEventItem jobEventItem = jobEventItemList.get(position);
 
@@ -59,12 +69,12 @@ public class jobEventAdapter extends BaseAdapter {
         eventTitle.setText(jobEventItem.getEventTitle());
         eventDate.setText(jobEventItem.getEventDate());
         eventLocation.setText(jobEventItem.getEventLocation());
+
+        if (jobEventItem.getEventLocation().equalsIgnoreCase("자과캠")) {
+            eventLocation.setTextColor(0xFF00B050);
+        }
         
         return convertView;
-    }
-
-    public void clear() {
-        jobEventItemList.clear();
     }
 
     //아이템 추가
