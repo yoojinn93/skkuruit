@@ -21,7 +21,6 @@ public class jobEventAdapter extends BaseAdapter {
     public jobEventAdapter() {
 
     }
-
     @Override
     public int getCount() {
         return jobEventItemList.size();
@@ -41,23 +40,30 @@ public class jobEventAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final Context context = parent.getContext();
         int viewType = getItemViewType(position) ;
+        jobEventItem jobEventItem = jobEventItemList.get(position);
 
-        if(convertView == null){
+        if(convertView == null){ //새로 생성될 때만 업데이트
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) ;
 
             // Data Set에서 position에 위치한 데이터 참조 획득
-            jobEventItem jobEventItem = jobEventItemList.get(position);
+//            jobEventItem = jobEventItemList.get(position);
 
             convertView = inflater.inflate(R.layout.jobevent_item, parent, false);
-            TextView eventTitle = (TextView) convertView.findViewById(R.id.eventTitle);
-            TextView eventDate = (TextView) convertView.findViewById(R.id.eventDate);
-            TextView eventLocation = (TextView) convertView.findViewById(R.id.eventLocation);
-
-            eventTitle.setText(jobEventItem.getEventTitle());
-            eventDate.setText(jobEventItem.getEventDate());
-            eventLocation.setText(jobEventItem.getEventLocation());
         }
+
+        TextView eventTitle = (TextView) convertView.findViewById(R.id.eventTitle);
+        TextView eventDate = (TextView) convertView.findViewById(R.id.eventDate);
+        TextView eventLocation = (TextView) convertView.findViewById(R.id.eventLocation);
+
+        eventTitle.setText(jobEventItem.getEventTitle());
+        eventDate.setText(jobEventItem.getEventDate());
+        eventLocation.setText(jobEventItem.getEventLocation());
+        
         return convertView;
+    }
+
+    public void clear() {
+        jobEventItemList.clear();
     }
 
     //아이템 추가
@@ -66,7 +72,11 @@ public class jobEventAdapter extends BaseAdapter {
         item.setEventTitle(eventTitle);
         item.setEventDate(eventDate);
         item.setEventLocation(eventLocation);
-        jobEventItemList.add(item) ;
+
+        jobEventItemList.add(item);
+
+//        this.notifyDataSetChanged(); // 그리고 notifyDataSetChanged를 호출해보세요.
+
     }
 }
 

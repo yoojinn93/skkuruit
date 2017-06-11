@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     // 6 : pushSettingView;
     // 7 : specificView
     // 8 : companyView
-    // 8 : allEventView
+    // 9 : allEventView
     ActionBar actionBar;
 
 
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = firebaseDatabase.getReference();
     TextView eventTitle, eventDate, eventLocation;
-    ListView listview;
+    ListView listView;
     jobEventAdapter adapter;
 
     @Override
@@ -75,21 +75,28 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //for jobEventItemList view
+        listView = (ListView) findViewById(R.id.mainListview1);
+
         adapter = new jobEventAdapter();
-        listview = (ListView) findViewById(R.id.mainListview1);
-        listview.setAdapter(adapter);
+        listView.setAdapter(adapter);
+
+
+//        jobEvent t = new jobEvent("abbb", "a", 1, "a");
+//        databaseReference.child("jobEvent").push().setValue(t);
 
         readJobEvent();
-
     }
 
     //채용설명회 공고 읽어오기
     private void readJobEvent() {
+//        databaseReference.child("jobEvent").orderByChild("date").limitToFirst(4).addChildEventListener(new ChildEventListener() {
         databaseReference.child("jobEvent").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
                 jobEvent jobevent = dataSnapshot.getValue(jobEvent.class);
                 adapter.addItem(jobevent.getTitle(), jobevent.getDate(), jobevent.getLocation());
+
                 adapter.notifyDataSetChanged();
             }
 
@@ -218,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
         showView(2);
     }
 
+    //메인페이지 전체공고 더보기 -> 전체공고 출력 페이지로 이동
     public void allEvent(View v) {
         showView(9);
     }
