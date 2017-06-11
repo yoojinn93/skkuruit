@@ -84,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
 //        jobEvent t = new jobEvent("abbb", "a", 1, "a");
 //        databaseReference.child("jobEvent").push().setValue(t);
 
+        adapter.addItem("abbb", "a", 1, "a");
+
         readJobEvent();
     }
 
@@ -94,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                jobEvent jobevent = dataSnapshot.getValue(jobEvent.class);
-                adapter.addItem(jobevent.getTitle(), jobevent.getDate(), jobevent.getLocation());
+                jobEventItem jobEventItem = dataSnapshot.getValue(jobEventItem.class);
+                adapter.addItem(jobEventItem.getEventTitle(), jobEventItem.getEventDate(), jobEventItem.getEventCompanyNo(), jobEventItem.getEventLocation());
 
                 adapter.notifyDataSetChanged();
             }

@@ -21,6 +21,7 @@ public class jobEventAdapter extends BaseAdapter {
     public jobEventAdapter() {
 
     }
+
     @Override
     public int getCount() {
         return jobEventItemList.size();
@@ -67,16 +68,14 @@ public class jobEventAdapter extends BaseAdapter {
     }
 
     //아이템 추가
-    public void addItem(String eventTitle, String eventDate, String eventLocation) {
+    public void addItem(String eventTitle, String eventDate, int eventCompanyNo, String eventLocation) {
         jobEventItem item = new jobEventItem() ;
         item.setEventTitle(eventTitle);
         item.setEventDate(eventDate);
+        item.setEventCompanyNo(eventCompanyNo);
         item.setEventLocation(eventLocation);
 
         jobEventItemList.add(item);
-
-//        this.notifyDataSetChanged(); // 그리고 notifyDataSetChanged를 호출해보세요.
-
     }
 }
 
