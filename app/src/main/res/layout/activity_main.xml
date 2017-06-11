@@ -874,6 +874,27 @@
                             android:gravity="center_vertical"
                             android:text="" />
                     </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@drawable/event_box"
+                        android:padding="0dp">
+                        <TextView
+                            android:id="@+id/spEventContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:padding="12dp"
+                            android:layout_marginLeft="1.5dp"
+                            android:layout_marginRight="1.5dp"
+                            android:layout_marginBottom="1.5dp"
+                            android:textSize="15dp"
+                            android:textColor="@color/mainColor"
+                            android:background="@drawable/white_box"
+                            android:gravity="center_vertical"
+                            android:text="" />
+                    </LinearLayout>
 
                     //준비하세요
                     <LinearLayout

@@ -8,6 +8,7 @@ public class jobEventItem {
     private String eventDate;
     private int eventCompanyNo;
     private String eventLocation;
+    private String eventContent;
 
     public jobEventItem() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -46,5 +47,12 @@ public class jobEventItem {
     }
     public String getEventLocation() {
         return eventLocation;
+    }
+
+    public void setEventContent(String eventContent) {
+        this.eventContent = eventContent;
+    }
+    public String getEventContent() {
+        return eventContent;
     }
 }

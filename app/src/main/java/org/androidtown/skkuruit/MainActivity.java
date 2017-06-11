@@ -116,7 +116,8 @@ public class MainActivity extends AppCompatActivity {
               @Override
               public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                   jobEventItem jobEventItem = dataSnapshot.getValue(jobEventItem.class);
-                  adapter2.addItem(jobEventItem.getEventTitle(), jobEventItem.getEventDate(), jobEventItem.getEventCompanyNo(), jobEventItem.getEventLocation());
+                  adapter2.addItem(jobEventItem.getEventTitle(), jobEventItem.getEventDate(),
+                          jobEventItem.getEventCompanyNo(), jobEventItem.getEventLocation(), jobEventItem.getEventContent());
                   adapter2.notifyDataSetChanged();
               }
 
@@ -156,7 +157,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
               jobEventItem jobEventItem = dataSnapshot.getValue(jobEventItem.class);
-              adapterAll.addItem(jobEventItem.getEventTitle(), jobEventItem.getEventDate(), jobEventItem.getEventCompanyNo(), jobEventItem.getEventLocation());
+              adapterAll.addItem(jobEventItem.getEventTitle(), jobEventItem.getEventDate(),
+                      jobEventItem.getEventCompanyNo(), jobEventItem.getEventLocation(), jobEventItem.getEventContent());
               adapterAll.notifyDataSetChanged();
             }
 
@@ -193,6 +195,9 @@ public class MainActivity extends AppCompatActivity {
         TextView spEventInfo= (TextView) findViewById(R.id.spEventInfo);
         spEventInfo.setText(adapter.getList().get(position).getEventLocation() + " : "
                 + adapter.getList().get(position).getEventDate());
+
+        TextView spEventContent = (TextView) findViewById(R.id.spEventContent);
+        spEventContent.setText(adapter.getList().get(position).getEventContent());
 
         getCompany(adapter.getList().get(position).getEventCompanyNo());
 
@@ -235,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
     );}
 
     //각 공고 클릭 시 해당하는 회사 정보 가져와 출력하기
-    private void getCompany(int companyNo) {
+    private void getCompany(final int companyNo) {
         databaseReference.child("company").orderByChild("companyNo").equalTo(companyNo).addChildEventListener(new ChildEventListener() {
                @Override
                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
