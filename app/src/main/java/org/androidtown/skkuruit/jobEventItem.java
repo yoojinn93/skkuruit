@@ -4,11 +4,13 @@ package org.androidtown.skkuruit;
  * Created by genie on 2017. 6. 10..
  */
 public class jobEventItem {
+    private int eventNo;
     private String eventTitle;
     private String eventDate;
     private int eventCompanyNo;
     private String eventLocation;
     private String eventContent;
+//    private Comment comment;
 
     public jobEventItem() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -19,6 +21,21 @@ public class jobEventItem {
         this.eventDate = eventDate;
         this.eventCompanyNo = eventCompanyNo;
         this.eventLocation = eventLocation;
+    }
+//
+//    public jobEventItem(String eventTitle, String eventDate, int eventCompanyNo, String eventLocation, Comment comment) {
+//        this.eventTitle = eventTitle;
+//        this.eventDate = eventDate;
+//        this.eventCompanyNo = eventCompanyNo;
+//        this.eventLocation = eventLocation;
+////        this.comment = comment;
+//    }
+
+    public void setEventNo(int eventNo) {
+        this.eventNo = eventNo;
+    }
+    public int getEventNo() {
+        return eventNo;
     }
 
     public void setEventTitle(String eventTitle) {
@@ -55,4 +72,8 @@ public class jobEventItem {
     public String getEventContent() {
         return eventContent;
     }
+
+//    public Comment getComment() {
+//        return comment;
+//    }
 }

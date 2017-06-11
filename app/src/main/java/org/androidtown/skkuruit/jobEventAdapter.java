@@ -78,8 +78,9 @@ public class jobEventAdapter extends BaseAdapter {
     }
 
     //아이템 추가
-    public void addItem(String eventTitle, String eventDate, int eventCompanyNo, String eventLocation, String eventContent) {
+    public void addItem(int eventNo, String eventTitle, String eventDate, int eventCompanyNo, String eventLocation, String eventContent) {
         jobEventItem item = new jobEventItem() ;
+        item.setEventNo(eventNo);
         item.setEventTitle(eventTitle);
         item.setEventDate(eventDate);
         item.setEventCompanyNo(eventCompanyNo);

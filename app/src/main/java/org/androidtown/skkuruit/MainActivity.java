@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -87,16 +88,6 @@ public class MainActivity extends AppCompatActivity {
 //        jobEvent t = new jobEvent("abbb", "a", 1, "a");
 //        databaseReference.child("jobEvent").push().setValue(t);
 //        adapter.addItem("abbb", "a", 1, "a");
-
-        //상세페이지에서 댓글 작성
-        Button cmtSendBtn = (Button) findViewById(R.id.cmtSendBtn);
-//        cmtSendBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                EditText commentInput = (EditText) findViewById(R.id.commentInput);
-//                databaseReference.push().setValue(commentInput.getText().toString());
-//            }
-//        });
     }
 
     //메인페이지-전체 공고 db 읽어와 출력
@@ -116,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
               @Override
               public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                   jobEventItem jobEventItem = dataSnapshot.getValue(jobEventItem.class);
-                  adapter2.addItem(jobEventItem.getEventTitle(), jobEventItem.getEventDate(),
+                  adapter2.addItem(jobEventItem.getEventNo(), jobEventItem.getEventTitle(), jobEventItem.getEventDate(),
                           jobEventItem.getEventCompanyNo(), jobEventItem.getEventLocation(), jobEventItem.getEventContent());
                   adapter2.notifyDataSetChanged();
               }
@@ -157,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
               jobEventItem jobEventItem = dataSnapshot.getValue(jobEventItem.class);
-              adapterAll.addItem(jobEventItem.getEventTitle(), jobEventItem.getEventDate(),
+              adapterAll.addItem(jobEventItem.getEventNo(), jobEventItem.getEventTitle(), jobEventItem.getEventDate(),
                       jobEventItem.getEventCompanyNo(), jobEventItem.getEventLocation(), jobEventItem.getEventContent());
               adapterAll.notifyDataSetChanged();
             }
@@ -199,11 +190,67 @@ public class MainActivity extends AppCompatActivity {
         TextView spEventContent = (TextView) findViewById(R.id.spEventContent);
         spEventContent.setText(adapter.getList().get(position).getEventContent());
 
+//        TextView cmttest = (TextView) findViewById(R.id.cmttest);
+////        cmttest.setText(adapter.getList().get(position).getComment().getCmtContent());
+
         getCompany(adapter.getList().get(position).getEventCompanyNo());
 
+        int eventNo = adapter.getList().get(position).getEventNo();
+        getComment(eventNo);
+        Toast.makeText(MainActivity.this, adapter.getList().get(position).getEventNo()+" ! ", Toast.LENGTH_LONG).show();
+
         showView(7);
+        writeCmt(eventNo);
+
     }
 
+    //상세페이지에서 댓글 작성
+    private void writeCmt(final int eventNo) {
+        Button cmtSendBtn = (Button) findViewById(R.id.cmtSendBtn);
+        cmtSendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText commentInput = (EditText) findViewById(R.id.commentInput);
+                Comment comment = new Comment(eventNo, "genie", commentInput.getText().toString(), "2017");
+                databaseReference.child("comment").push().setValue(comment);
+                commentInput.setText("");
+            }
+        });
+    }
+
+    //해당 공고에 대한 댓글 읽어오기
+    private void getComment(int eventNo) {
+        databaseReference.child("comment").orderByChild("targetEvent").equalTo(eventNo).addChildEventListener(new ChildEventListener() {
+              @Override
+              public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                  Comment comment = dataSnapshot.getValue(Comment.class);
+
+                  TextView cmttest = (TextView) findViewById(R.id.cmttest);
+                  cmttest.setText(comment.getCmtContent());
+              }
+
+              @Override
+              public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+              }
+
+              @Override
+              public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+              }
+
+              @Override
+              public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+              }
+
+              @Override
+              public void onCancelled(DatabaseError databaseError) {
+
+              }
+            }
+        );
+    }
     //카테고리 읽어오기
     private void getCategory() {
         databaseReference.child("companyCategory").orderByChild("categoryNo").equalTo(1).addChildEventListener(new ChildEventListener() {
@@ -240,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
     );}
 
     //각 공고 클릭 시 해당하는 회사 정보 가져와 출력하기
-    private void getCompany(final int companyNo) {
+    private void getCompany(int companyNo) {
         databaseReference.child("company").orderByChild("companyNo").equalTo(companyNo).addChildEventListener(new ChildEventListener() {
                @Override
                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -277,7 +324,8 @@ public class MainActivity extends AppCompatActivity {
 
                }
            }
-        );}
+        );
+    }
 
     //액션바 menu 변경
     @Override
