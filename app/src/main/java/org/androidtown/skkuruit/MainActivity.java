@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -37,11 +36,11 @@ public class MainActivity extends AppCompatActivity {
     // 9 : allEventView
     ActionBar actionBar;
 
-    //test;
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = firebaseDatabase.getReference();
-    ListView mainViewList1, mainViewList2, allEventViewList;
+    ListView mainViewList1, mainViewList2, allEventViewList, cmtViewList;
     jobEventAdapter adapter1, adapter2, adapterAll;
+    commentAdapter adapterCmt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,18 +69,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
         //for listview - 메인, 전체공고
         mainViewList1 = (ListView) findViewById(R.id.mainViewList1);
         mainViewList2 = (ListView) findViewById(R.id.mainViewList2);
         allEventViewList = (ListView) findViewById(R.id.allEventViewList);
+        cmtViewList = (ListView) findViewById(R.id.cmtViewList);
 
+        //상세페이지 - 내용 부분 Header로 설정
+        View header = getLayoutInflater().inflate(R.layout.spevent_header, null, false);
+        cmtViewList.addHeaderView(header);
+
+        //adpater 설정
         adapter1 = new jobEventAdapter();
         adapter2 = new jobEventAdapter();
         adapterAll = new jobEventAdapter();
+        adapterCmt = new commentAdapter();
 
         mainViewList1.setAdapter(adapter1);
         mainViewList2.setAdapter(adapter2);
         allEventViewList.setAdapter(adapterAll);
+        cmtViewList.setAdapter(adapterCmt);
 
         readJobEvent();
 //        getCompany();
@@ -190,14 +199,11 @@ public class MainActivity extends AppCompatActivity {
         TextView spEventContent = (TextView) findViewById(R.id.spEventContent);
         spEventContent.setText(adapter.getList().get(position).getEventContent());
 
-//        TextView cmttest = (TextView) findViewById(R.id.cmttest);
-////        cmttest.setText(adapter.getList().get(position).getComment().getCmtContent());
-
         getCompany(adapter.getList().get(position).getEventCompanyNo());
 
         int eventNo = adapter.getList().get(position).getEventNo();
         getComment(eventNo);
-        Toast.makeText(MainActivity.this, adapter.getList().get(position).getEventNo()+" ! ", Toast.LENGTH_LONG).show();
+//        Toast.makeText(MainActivity.this, adapter.getList().get(position).getEventNo()+" ! ", Toast.LENGTH_LONG).show();
 
         showView(7);
         writeCmt(eventNo);
@@ -220,13 +226,23 @@ public class MainActivity extends AppCompatActivity {
 
     //해당 공고에 대한 댓글 읽어오기
     private void getComment(int eventNo) {
+        //공고 클릭할 때마다 초기화 필요
+        adapterCmt.clear();
+        //댓글 리스트뷰, 어댑터 만들고
+        //댓글 사이즈 1보다 크면 댓글 없다는 text invisible 처리
+
         databaseReference.child("comment").orderByChild("targetEvent").equalTo(eventNo).addChildEventListener(new ChildEventListener() {
               @Override
               public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                   Comment comment = dataSnapshot.getValue(Comment.class);
 
-                  TextView cmttest = (TextView) findViewById(R.id.cmttest);
-                  cmttest.setText(comment.getCmtContent());
+//                  Toast.makeText(MainActivity.this, comment.getCmtContent()+" ! ", Toast.LENGTH_SHORT).show();
+
+//                  TextView cmttest = (TextView) findViewById(R.id.cmttest);
+//                  cmttest.setText(comment.getCmtContent());
+
+                  adapterCmt.addItem(comment.getTargetEvent(), comment.getCmtUser(), comment.getCmtContent(), comment.getCmtDate());
+                  adapterCmt.notifyDataSetChanged();
               }
 
               @Override

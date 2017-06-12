@@ -54,7 +54,7 @@ public class jobEventAdapter extends BaseAdapter {
         jobEventItem jobEventItem = jobEventItemList.get(position);
 
         if(convertView == null){ //새로 생성될 때만 업데이트
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) ;
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             // Data Set에서 position에 위치한 데이터 참조 획득
 //            jobEventItem = jobEventItemList.get(position);

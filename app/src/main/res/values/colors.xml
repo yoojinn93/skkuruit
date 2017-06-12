@@ -8,4 +8,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="inColor">#FF2E75B6</color>
     <color name="jaColor">#FF00B050</color>
+    <color name="dateColor">#7e7c7c</color>
 </resources>
