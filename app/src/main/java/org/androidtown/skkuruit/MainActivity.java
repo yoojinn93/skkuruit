@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -41,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
     ListView mainViewList1, mainViewList2, allEventViewList, cmtViewList;
     jobEventAdapter adapter1, adapter2, adapterAll;
     commentAdapter adapterCmt;
+
+    ArrayList<ToggleButton> favBtns = new ArrayList<ToggleButton>();
+    //0 : 삼성
+    //1 : 현대차
+    //2 : SK
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
 //        jobEvent t = new jobEvent("abbb", "a", 1, "a");
 //        databaseReference.child("jobEvent").push().setValue(t);
 //        adapter.addItem("abbb", "a", 1, "a");
+
     }
 
     //메인페이지-전체 공고 db 읽어와 출력
@@ -203,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
 
         int eventNo = adapter.getList().get(position).getEventNo();
         getComment(eventNo);
+
 //        Toast.makeText(MainActivity.this, adapter.getList().get(position).getEventNo()+" ! ", Toast.LENGTH_LONG).show();
 
         showView(7);
@@ -236,13 +245,17 @@ public class MainActivity extends AppCompatActivity {
               public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                   Comment comment = dataSnapshot.getValue(Comment.class);
 
-//                  Toast.makeText(MainActivity.this, comment.getCmtContent()+" ! ", Toast.LENGTH_SHORT).show();
+                  Toast.makeText(MainActivity.this, comment.getCmtContent()+" ! ", Toast.LENGTH_SHORT).show();
 
 //                  TextView cmttest = (TextView) findViewById(R.id.cmttest);
 //                  cmttest.setText(comment.getCmtContent());
 
                   adapterCmt.addItem(comment.getTargetEvent(), comment.getCmtUser(), comment.getCmtContent(), comment.getCmtDate());
+
                   adapterCmt.notifyDataSetChanged();
+
+                  LinearLayout noCommentMsg = (LinearLayout) findViewById(R.id.noCommentMsg);
+                  noCommentMsg.setVisibility(View.GONE);
               }
 
               @Override
@@ -264,8 +277,7 @@ public class MainActivity extends AppCompatActivity {
               public void onCancelled(DatabaseError databaseError) {
 
               }
-            }
-        );
+        });
     }
     //카테고리 읽어오기
     private void getCategory() {
@@ -442,15 +454,39 @@ public class MainActivity extends AppCompatActivity {
         actionBar.show();
     }
 
-    public void notFavSetting() {
-        TextView notFavMsg = (TextView) findViewById(R.id.notFavMsg);
-        notFavMsg.setVisibility(View.INVISIBLE);
-    }
-
     //'나의 관심기업/산업군' 설정 페이지로 이동
     public void favoriteSetting(View v) {
         showView(2);
+
+        //관심 산업군 버튼 등록
+        favBtns.add((ToggleButton) findViewById(R.id.favBtn1));
+        favBtns.add((ToggleButton) findViewById(R.id.favBtn2));
+        favBtns.add((ToggleButton) findViewById(R.id.favBtn3));
+        favBtns.add((ToggleButton) findViewById(R.id.favBtn4));
+        favBtns.add((ToggleButton) findViewById(R.id.favBtn5));
+        favBtns.add((ToggleButton) findViewById(R.id.favBtn6));
+        favBtns.add((ToggleButton) findViewById(R.id.favBtn7));
+        favBtns.add((ToggleButton) findViewById(R.id.favBtn8));
+        favBtns.add((ToggleButton) findViewById(R.id.favBtn9));
+
+        //관심 산업군 버튼 onclick event 설정
+        for (int i=0; i<favBtns.size(); i++) {
+            final ToggleButton targetFavBtn = favBtns.get(i);
+            targetFavBtn.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    if (targetFavBtn.isChecked()) {
+                        targetFavBtn.setTextColor(0xFFFFFFFF);
+                        targetFavBtn.setBackground((getResources().getDrawable(R.drawable.selected_button)));
+                    }
+                    else {
+                        targetFavBtn.setTextColor(0xFF151515);
+                        targetFavBtn.setBackgroundDrawable((getResources().getDrawable(R.drawable.button)));
+                    }
+                }
+            });
+        }
     }
+
 
     //메인페이지 전체공고 더보기 -> 전체공고 출력 페이지로 이동
     public void allEvent(View v) {

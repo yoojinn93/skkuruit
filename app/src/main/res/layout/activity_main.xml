@@ -445,7 +445,6 @@
                             android:padding="15dp">
 
                             <TextView
-                                android:id="@+id/textView3"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="나의 관심 기업"
@@ -454,47 +453,50 @@
                                 android:textStyle="bold"
                                 android:layout_marginBottom="5dp"/>
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="horizontal">
+                            <!--<LinearLayout-->
+                                <!--android:layout_width="match_parent"-->
+                                <!--android:layout_height="match_parent"-->
+                                <!--android:orientation="horizontal">-->
 
-                                <Button
-                                    android:id="@+id/button10"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="3dp"
-                                    android:layout_weight="1"
-                                    android:background="@drawable/button"
-                                    android:textColor="@color/mainColor"
-                                    android:textSize="15dp"
-                                    android:textStyle="bold"
-                                    android:text="삼성" />
+                                <!--<ToggleButton-->
+                                    <!--android:id="@+id/favBtn1"-->
+                                    <!--android:layout_width="wrap_content"-->
+                                    <!--android:layout_height="wrap_content"-->
+                                    <!--android:layout_margin="3dp"-->
+                                    <!--android:layout_weight="1"-->
+                                    <!--android:background="@drawable/button"-->
+                                    <!--android:textColor="@color/mainColor"-->
+                                    <!--android:textSize="15dp"-->
+                                    <!--android:textStyle="bold"-->
+                                    <!--android:textOff="삼성"-->
+                                    <!--android:textOn="삼성" />-->
 
-                                <Button
-                                    android:id="@+id/button9"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="3dp"
-                                    android:layout_weight="1"
-                                    android:background="@drawable/selected_button"
-                                    android:textColor="@color/white"
-                                    android:textSize="15dp"
-                                    android:textStyle="bold"
-                                    android:text="현대차" />
+                                <!--<ToggleButton-->
+                                    <!--android:id="@+id/favBtn2"-->
+                                    <!--android:layout_width="wrap_content"-->
+                                    <!--android:layout_height="wrap_content"-->
+                                    <!--android:layout_margin="3dp"-->
+                                    <!--android:layout_weight="1"-->
+                                    <!--android:background="@drawable/button"-->
+                                    <!--android:textColor="@color/mainColor"-->
+                                    <!--android:textSize="15dp"-->
+                                    <!--android:textStyle="bold"-->
+                                    <!--android:textOff="현대차"-->
+                                    <!--android:textOn="현대차" />-->
 
-                                <Button
-                                    android:id="@+id/button8"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="3dp"
-                                    android:layout_weight="1"
-                                    android:background="@drawable/button"
-                                    android:textColor="@color/mainColor"
-                                    android:textSize="15dp"
-                                    android:textStyle="bold"
-                                    android:text="SK" />
-                            </LinearLayout>
+                                <!--<ToggleButton-->
+                                    <!--android:id="@+id/favBtn3"-->
+                                    <!--android:layout_width="wrap_content"-->
+                                    <!--android:layout_height="wrap_content"-->
+                                    <!--android:layout_margin="3dp"-->
+                                    <!--android:layout_weight="1"-->
+                                    <!--android:background="@drawable/button"-->
+                                    <!--android:textColor="@color/mainColor"-->
+                                    <!--android:textSize="15dp"-->
+                                    <!--android:textStyle="bold"-->
+                                    <!--android:textOff="SK"-->
+                                    <!--android:textOn="SK" />-->
+                            <!--</LinearLayout>-->
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -590,7 +592,6 @@
                             android:paddingLeft="15dp">
 
                             <TextView
-                                android:id="@+id/textView3"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="나의 관심 산업군"
@@ -604,8 +605,8 @@
                                 android:layout_height="match_parent"
                                 android:orientation="horizontal">
 
-                                <Button
-                                    android:id="@+id/button10"
+                                <ToggleButton
+                                    android:id="@+id/favBtn1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="3dp"
@@ -614,22 +615,11 @@
                                     android:textColor="@color/mainColor"
                                     android:textSize="15dp"
                                     android:textStyle="bold"
-                                    android:text="삼성" />
+                                    android:textOff="판매/유통"
+                                    android:textOn="판매/유통" />
 
-                                <Button
-                                    android:id="@+id/button9"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="3dp"
-                                    android:layout_weight="1"
-                                    android:background="@drawable/selected_button"
-                                    android:textColor="@color/white"
-                                    android:textSize="15dp"
-                                    android:textStyle="bold"
-                                    android:text="현대차" />
-
-                                <Button
-                                    android:id="@+id/button8"
+                                <ToggleButton
+                                    android:id="@+id/favBtn2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="3dp"
@@ -638,16 +628,29 @@
                                     android:textColor="@color/mainColor"
                                     android:textSize="15dp"
                                     android:textStyle="bold"
-                                    android:text="SK" />
+                                    android:textOff="제조/화학"
+                                    android:textOn="제조/화학" />
+
+                                <ToggleButton
+                                    android:id="@+id/favBtn3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="3dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/button"
+                                    android:textColor="@color/mainColor"
+                                    android:textSize="15dp"
+                                    android:textStyle="bold"
+                                    android:textOff="의료/제약"
+                                    android:textOn="의료/제약" />
                             </LinearLayout>
-
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:orientation="horizontal">
 
-                                <Button
-                                    android:id="@+id/button10"
+                                <ToggleButton
+                                    android:id="@+id/favBtn4"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="3dp"
@@ -656,10 +659,11 @@
                                     android:textColor="@color/mainColor"
                                     android:textSize="15dp"
                                     android:textStyle="bold"
-                                    android:text="LG" />
+                                    android:textOff="서비스업"
+                                    android:textOn="서비스업" />
 
-                                <Button
-                                    android:id="@+id/button9"
+                                <ToggleButton
+                                    android:id="@+id/favBtn5"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="3dp"
@@ -668,10 +672,11 @@
                                     android:textColor="@color/mainColor"
                                     android:textSize="15dp"
                                     android:textStyle="bold"
-                                    android:text="롯데" />
+                                    android:textOff="미디어"
+                                    android:textOn="미디어" />
 
-                                <Button
-                                    android:id="@+id/button8"
+                                <ToggleButton
+                                    android:id="@+id/favBtn6"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="3dp"
@@ -680,16 +685,16 @@
                                     android:textColor="@color/mainColor"
                                     android:textSize="15dp"
                                     android:textStyle="bold"
-                                    android:text="포스코" />
+                                    android:textOff="은행/금융"
+                                    android:textOn="은행/금융" />
                             </LinearLayout>
-
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:orientation="horizontal">
 
-                                <Button
-                                    android:id="@+id/button10"
+                                <ToggleButton
+                                    android:id="@+id/favBtn7"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="3dp"
@@ -698,10 +703,11 @@
                                     android:textColor="@color/mainColor"
                                     android:textSize="15dp"
                                     android:textStyle="bold"
-                                    android:text="GS" />
+                                    android:textOff="교육"
+                                    android:textOn="교육" />
 
-                                <Button
-                                    android:id="@+id/button9"
+                                <ToggleButton
+                                    android:id="@+id/favBtn8"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="3dp"
@@ -710,10 +716,11 @@
                                     android:textColor="@color/mainColor"
                                     android:textSize="15dp"
                                     android:textStyle="bold"
-                                    android:text="한화" />
+                                    android:textOff="IT/웹/통신"
+                                    android:textOn="IT/웹/통신" />
 
-                                <Button
-                                    android:id="@+id/button8"
+                                <ToggleButton
+                                    android:id="@+id/favBtn9"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="3dp"
@@ -722,7 +729,8 @@
                                     android:textColor="@color/mainColor"
                                     android:textSize="15dp"
                                     android:textStyle="bold"
-                                    android:text="현대중공업" />
+                                    android:textOff="건설"
+                                    android:textOn="건설" />
                             </LinearLayout>
                         </LinearLayout>
 
