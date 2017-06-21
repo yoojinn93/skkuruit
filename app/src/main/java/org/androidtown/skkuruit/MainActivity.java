@@ -202,9 +202,6 @@ public class MainActivity extends AppCompatActivity {
         TextView spEventTitle = (TextView) findViewById(R.id.spEventTitle);
         spEventTitle.setText(adapter.getList().get(position).getEventTitle());
 
-        TextView spEventCompany = (TextView) findViewById(R.id.spEventCompany);
-        spEventCompany.setText(String.valueOf(adapter.getList().get(position).getEventCompanyNo()));
-
         TextView spEventInfo= (TextView) findViewById(R.id.spEventInfo);
         spEventInfo.setText(adapter.getList().get(position).getEventLocation() + " : "
                 + adapter.getList().get(position).getEventDate());
@@ -217,7 +214,18 @@ public class MainActivity extends AppCompatActivity {
         int eventNo = adapter.getList().get(position).getEventNo();
         getComment(eventNo);
 
-//        Toast.makeText(MainActivity.this, adapter.getList().get(position).getEventNo()+" ! ", Toast.LENGTH_LONG).show();
+        //star
+        final ToggleButton scrapBtn2 = (ToggleButton) findViewById(R.id.scrapBtn2);
+        scrapBtn2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.v("scrap", "click");
+                if (scrapBtn2.isChecked()) {
+                    scrapBtn2.setBackgroundResource(R.drawable.star);
+                } else {
+                    scrapBtn2.setBackgroundResource(R.drawable.unstar);
+                }
+            }
+        });
 
         showView(7);
         writeCmt(eventNo);
@@ -260,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
         //댓글 리스트뷰, 어댑터 만들고
         //댓글 사이즈 1보다 크면 댓글 없다는 text invisible 처리
 
-        databaseReference.child("comment").orderByChild("targetEvent").equalTo(eventNo).limitToFirst(2).addChildEventListener(new ChildEventListener() {
+        databaseReference.child("comment").orderByChild("targetEvent").equalTo(eventNo).addChildEventListener(new ChildEventListener() {
               @Override
               public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                   Comment comment = dataSnapshot.getValue(Comment.class);
@@ -340,7 +348,10 @@ public class MainActivity extends AppCompatActivity {
                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                    company company = dataSnapshot.getValue(company.class);
 
-                   //산업군/필수사항/우대사항 채우기
+                   //회사명/산업군/필수사항/우대사항 채우기
+                   TextView spEventCompany = (TextView) findViewById(R.id.spEventCompany);
+                   spEventCompany.setText(company.getCompanyName());
+
                    TextView spEventCate = (TextView) findViewById(R.id.spEventCate);
                    spEventCate.setText(company.getCompanyCate());
 
