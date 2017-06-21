@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -119,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         mainViewList2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.v("click", "why");
                 displaySpEvent(position, adapter2);
             }
         });
@@ -152,25 +154,9 @@ public class MainActivity extends AppCompatActivity {
 
               }
         });
-
-        //star
-//        final ToggleButton scrapBtn = (ToggleButton) findViewById(R.id.scrapBtn);
-//        scrapBtn.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                if (scrapBtn.isChecked()) {
-//                    scrapBtn.setTextColor(0xFFFFFFFF);
-////                    Toast.makeText(MainActivity.this, "ServerValue.TIMESTAMP", Toast.LENGTH_SHORT).show();
-//                    scrapBtn.setBackgroundResource(R.drawable.star);
-////                    scrapBtn.setBackground((getResources().getDrawable(R.drawable.star)));
-//                } else {
-////                    scrapBtn.setTextColor(0xFFFFFFFF);
-//                    scrapBtn.setBackground((getResources().getDrawable(R.drawable.unstar)));
-//                }
-//            }
-//        });
     }
 
-    //firebase에서 채용설명회 공고 읽어와 박스 출력
+    //전체공고 출력 - firebase에서 채용설명회 공고 읽어와 박스 출력
     private void readJobEvent() {
         //listview의 각 event 클릭 시
         allEventViewList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -235,7 +221,6 @@ public class MainActivity extends AppCompatActivity {
 
         showView(7);
         writeCmt(eventNo);
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
