@@ -64,8 +64,8 @@
                 android:layout_margin="3dp"
                 android:background="@drawable/unstar"
                 android:textColor="@color/mainColor"
-                android:textOff="OFF"
-                android:textOn="ON" />
+                android:textOff=""
+                android:textOn="" />
 
             <!--<ToggleButton-->
                 <!--android:id="@+id/imageView2"-->

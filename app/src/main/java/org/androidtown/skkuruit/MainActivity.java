@@ -154,13 +154,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //star
-
 //        final ToggleButton scrapBtn = (ToggleButton) findViewById(R.id.scrapBtn);
 //        scrapBtn.setOnClickListener(new View.OnClickListener() {
 //            public void onClick(View v) {
 //                if (scrapBtn.isChecked()) {
 //                    scrapBtn.setTextColor(0xFFFFFFFF);
-//                    Toast.makeText(MainActivity.this, "ServerValue.TIMESTAMP", Toast.LENGTH_SHORT).show();
+////                    Toast.makeText(MainActivity.this, "ServerValue.TIMESTAMP", Toast.LENGTH_SHORT).show();
 //                    scrapBtn.setBackgroundResource(R.drawable.star);
 ////                    scrapBtn.setBackground((getResources().getDrawable(R.drawable.star)));
 //                } else {

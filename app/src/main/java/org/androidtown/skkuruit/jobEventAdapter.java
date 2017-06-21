@@ -1,11 +1,13 @@
 package org.androidtown.skkuruit;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
@@ -73,7 +75,20 @@ public class jobEventAdapter extends BaseAdapter {
         if (jobEventItem.getEventLocation().equalsIgnoreCase("자과캠")) {
             eventLocation.setTextColor(0xFF00B050);
         }
-        
+
+        //star
+        final ToggleButton scrapBtn = (ToggleButton) convertView.findViewById(R.id.scrapBtn);
+        scrapBtn.setTag(position);
+        scrapBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (scrapBtn.isChecked()) {
+                    scrapBtn.setBackgroundResource(R.drawable.star);
+                } else {
+                    scrapBtn.setBackgroundResource(R.drawable.unstar);
+                }
+            }
+        });
+
         return convertView;
     }
 
