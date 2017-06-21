@@ -9,10 +9,7 @@ public class Comment {
     private String cmtContent;
     private String cmtDate;
 
-
-    public Comment() {
-        // Default constructor required for calls to DataSnapshot.getValue(User.class)
-    }
+    public Comment(){}
 
     public Comment(int targetEvent, String cmtUser, String cmtContent, String cmtDate) {
         this.targetEvent = targetEvent;

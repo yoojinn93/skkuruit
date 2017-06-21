@@ -1,6 +1,9 @@
 package org.androidtown.skkuruit;
 
+import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -12,7 +15,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.firebase.database.ChildEventListener;
@@ -22,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -148,8 +151,25 @@ public class MainActivity extends AppCompatActivity {
               public void onCancelled(DatabaseError databaseError) {
 
               }
-          }
-    );}
+        });
+
+        //star
+
+//        final ToggleButton scrapBtn = (ToggleButton) findViewById(R.id.scrapBtn);
+//        scrapBtn.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                if (scrapBtn.isChecked()) {
+//                    scrapBtn.setTextColor(0xFFFFFFFF);
+//                    Toast.makeText(MainActivity.this, "ServerValue.TIMESTAMP", Toast.LENGTH_SHORT).show();
+//                    scrapBtn.setBackgroundResource(R.drawable.star);
+////                    scrapBtn.setBackground((getResources().getDrawable(R.drawable.star)));
+//                } else {
+////                    scrapBtn.setTextColor(0xFFFFFFFF);
+//                    scrapBtn.setBackground((getResources().getDrawable(R.drawable.unstar)));
+//                }
+//            }
+//        });
+    }
 
     //firebase에서 채용설명회 공고 읽어와 박스 출력
     private void readJobEvent() {
@@ -219,14 +239,30 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private String getCurrentTime() {
+        // 시간을 나타냇 포맷을 정한다 ( yyyy/MM/dd 같은 형태로 변형 가능 )
+        SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy.MM.dd HH:mm");
+        // 현재시간을 msec 으로 구한다.
+        long now = System.currentTimeMillis();
+        // 현재시간을 date 변수에 저장한다.
+        Date date = new Date(now);
+        // nowDate 변수에 값을 저장한다.
+        String formatDate = sdfNow.format(date);
+
+        return formatDate;
+    }
+
     //상세페이지에서 댓글 작성
     private void writeCmt(final int eventNo) {
         Button cmtSendBtn = (Button) findViewById(R.id.cmtSendBtn);
         cmtSendBtn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
                 EditText commentInput = (EditText) findViewById(R.id.commentInput);
-                Comment comment = new Comment(eventNo, "genie", commentInput.getText().toString(), "2017");
+
+                Comment comment = new Comment(eventNo, "genie", commentInput.getText().toString(), getCurrentTime());
                 databaseReference.child("comment").push().setValue(comment);
                 commentInput.setText("");
             }
@@ -240,12 +276,11 @@ public class MainActivity extends AppCompatActivity {
         //댓글 리스트뷰, 어댑터 만들고
         //댓글 사이즈 1보다 크면 댓글 없다는 text invisible 처리
 
-        databaseReference.child("comment").orderByChild("targetEvent").equalTo(eventNo).addChildEventListener(new ChildEventListener() {
+        databaseReference.child("comment").orderByChild("targetEvent").equalTo(eventNo).limitToFirst(2).addChildEventListener(new ChildEventListener() {
               @Override
               public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                   Comment comment = dataSnapshot.getValue(Comment.class);
-
-                  Toast.makeText(MainActivity.this, comment.getCmtContent()+" ! ", Toast.LENGTH_SHORT).show();
+//                  Toast.makeText(MainActivity.this, ServerValue.TIMESTAMP+"", Toast.LENGTH_SHORT).show();
 
 //                  TextView cmttest = (TextView) findViewById(R.id.cmttest);
 //                  cmttest.setText(comment.getCmtContent());
@@ -476,11 +511,11 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (targetFavBtn.isChecked()) {
                         targetFavBtn.setTextColor(0xFFFFFFFF);
-                        targetFavBtn.setBackground((getResources().getDrawable(R.drawable.selected_button)));
+                        targetFavBtn.setBackgroundResource(R.drawable.selected_button);
                     }
                     else {
                         targetFavBtn.setTextColor(0xFF151515);
-                        targetFavBtn.setBackgroundDrawable((getResources().getDrawable(R.drawable.button)));
+                        targetFavBtn.setBackgroundResource(R.drawable.button);
                     }
                 }
             });

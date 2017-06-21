@@ -6,15 +6,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ScrollView>
-
-    <ToggleButton
-        android:id="@+id/ee"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/event_box"
-        android:textOff="Off Stage"
-        android:textOn="On Stage" />
+        android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +19,6 @@
             android:orientation="vertical">
 
             //공고 기본 정보
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -367,4 +358,6 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    </ScrollView>
 </LinearLayout>
