@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.firebase.database.ChildEventListener;
@@ -100,6 +99,16 @@ public class MainActivity extends AppCompatActivity {
         cmtViewList.setAdapter(adapterCmt);
         companyViewList.setAdapter(adapterCom);
 
+//        Button startBtn = (Button) findViewById(R.id.startBtn);
+//        startBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(MainActivity.this, "start!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+        //로딩페이지 - 기존 user일 경우 바로 시작
+        registeredUserCheck();
 
         //로딩페이지 - 신규 user 닉네임 등록
         EditText nickText = (EditText) findViewById(R.id.nickText);
@@ -111,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        registerUserCheck();
         readJobEvent();
     }
 
@@ -160,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void registerUserCheck() {
+    private void registeredUserCheck() {
 //        User user = new User();
 //        user.setFcmToken(FirebaseInstanceId.getInstance().getToken());
 //        databaseReference.child("user").push().setValue(user);
@@ -168,9 +176,6 @@ public class MainActivity extends AppCompatActivity {
 //        firebaseDatabase.getReference("user").child("genie").setValue(user);
 //        mFirebaseDatabase.getReference("users").child(userData.userEmailID).setValue(userData);
 
-
-//        DatabaseReference userDatabase;
-//        userDatabase = firebaseDatabase.getReference("user");
         userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -186,8 +191,6 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     }
                 }
-                //가입한 회원 아니면 닉네임 입력 진행
-//                Toast.makeText(getApplicationContext(),"회원아님!",Toast.LENGTH_LONG).show();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -206,45 +209,33 @@ public class MainActivity extends AppCompatActivity {
 
                 while(child.hasNext()) {
                     if (child.next().child("nickname").getValue().toString().equals(nickText.getText().toString())) {
-                        Toast.makeText(getApplicationContext(), "존재하는 닉넴", Toast.LENGTH_LONG).show();
-                        nickDescription.setText("이미 있는 닉네임입니다!");
+                        nickDescription.setText("! 이미 있는 닉네임입니다!");
+                        nickDescription.setTextColor(0xEEE40808);
                         databaseReference.removeEventListener(this);
                         return;
                     }
                 }
-                //makeUser();
+                nickDescription.setText("ㅇ 사용 가능한 닉네임입니다");
+                nickDescription.setTextColor(0xFF00B050);
+                databaseReference.removeEventListener(this);
+
+                //시작하기 버튼 활성화
+                Button startBtn = (Button) findViewById(R.id.startBtn);
+                startBtn.setBackgroundResource(R.drawable.selected_button);
+                startBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //makeUser();
+                        initStart();
+                    }
+                });
+
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-
-//        ValueEventListener checkRegister = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-////                User user = dataSnapshot.getValue(User.class);
-//                Iterator<DataSnapshot> child = dataSnapshot.getChildren().iterator();
-//
-//                while(child.hasNext()) { //중복 유무 확인
-//                    Toast.makeText(getApplicationContext(), child.next().child("nickname").getValue().toString(), Toast.LENGTH_LONG).show();
-//
-////                    if(child.next().child("nickname").getValue().equals("genie")) {
-////                        Toast.makeText(getApplicationContext(), "존재하는 닉네임 입니다.", Toast.LENGTH_LONG).show();
-////
-////                    }
-////                    if (nickText.getText().toString().equals(child.next()) {
-////                        Toast.makeText(getApplicationContext(), "존재하는 아이디 입니다.", Toast.LENGTH_LONG).show();
-////                        databaseReference.removeEventListener(this);
-////                        return;
-////                    }
-//                }
-////                makeNewId();
-//            }
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//            }
-//        };
     }
 
 

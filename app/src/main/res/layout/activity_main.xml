@@ -71,7 +71,7 @@
                     android:layout_weight="0.12"
                     android:text="닉네임은 최초 한번만 설정 가능합니다"
                     android:textSize="15dp"
-                    android:textStyle="italic"
+                    android:textStyle="italic|bold"
                     android:textColor="@color/mainColor"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
@@ -82,7 +82,7 @@
                     android:id="@+id/startBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selected_button"
+                    android:background="@drawable/gray_box"
                     android:text="시작하기"
                     android:textColor="#ffffff"
                     android:textSize="17dp"/>
