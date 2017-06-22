@@ -175,7 +175,8 @@
                     android:padding="12dp"
                     android:text=""
                     android:textColor="@color/mainColor"
-                    android:textSize="15dp" />
+                    android:textSize="15dp"
+                    android:lineSpacingExtra="7dip"/>
             </LinearLayout>
 
             //준비하세요
@@ -224,7 +225,7 @@
                     android:text=""
                     android:textColor="@color/mainColor"
                     android:textSize="15dp"
-                    android:lineSpacingExtra="5dip"/>
+                    android:lineSpacingExtra="7dip"/>
             </LinearLayout>
 
             <LinearLayout
@@ -255,7 +256,7 @@
                     android:text=""
                     android:textColor="@color/mainColor"
                     android:textSize="15dp"
-                    android:lineSpacingExtra="5dip"/>
+                    android:lineSpacingExtra="7dip"/>
             </LinearLayout>
 
             //연관 채용공고 살펴보기

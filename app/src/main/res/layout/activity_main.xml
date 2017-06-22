@@ -1098,7 +1098,9 @@
                 android:id="@+id/companyViewList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="15dp"/>
+                android:padding="15dp"
+                android:dividerHeight="0dp"
+                android:divider="#00000000"/>
         </LinearLayout>
 
         // 마이페이지 page
@@ -1411,7 +1413,17 @@
                     android:track="@drawable/switch_track_selector"
                     android:thumb="@drawable/switch_thumb_selector"/>
             </LinearLayout>
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.12"
+                android:text="설정하신 ‘나의 관심 기업/산업군’을 기반으로\n채용 푸쉬 알림을 보내드립니다\n\n‘나의 관심 기업/산업군’ 설정은\n마이페이지에서 가능합니다"
+                android:textSize="15dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:textColor="@color/mainColor"
+                android:padding="35dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
         </LinearLayout>
 
         // 공고 전체보기 page

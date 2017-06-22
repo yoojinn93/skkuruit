@@ -53,9 +53,6 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<Button> favComs = new ArrayList<Button>();
     ArrayList<ToggleButton> favBtns = new ArrayList<ToggleButton>();
-    //0 : 삼성
-    //1 : 현대차
-    //2 : SK
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,11 +108,6 @@ public class MainActivity extends AppCompatActivity {
         companyViewList.setAdapter(adapterCom);
 
         readJobEvent();
-//        getCompany();
-//        jobEvent t = new jobEvent("abbb", "a", 1, "a");
-//        databaseReference.child("jobEvent").push().setValue(t);
-//        adapter.addItem("abbb", "a", 1, "a");
-
     }
 
     //메인페이지-전체 공고 db 읽어와 출력
@@ -206,6 +198,8 @@ public class MainActivity extends AppCompatActivity {
 
     //각 공고 박스 클릭 -> 상세 공고 페이지로 이동
     private void displaySpEvent(int position, jobEventAdapter adapter) {
+        setDefaultActionBarBack();
+
         TextView spEventTitle = (TextView) findViewById(R.id.spEventTitle);
         spEventTitle.setText(adapter.getList().get(position).getEventTitle());
 
@@ -395,21 +389,21 @@ public class MainActivity extends AppCompatActivity {
     //액션바 menu 변경
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-
         actionBar = getSupportActionBar();
 
         // Custom Actionbar를 사용하기 위해 CustomEnabled을 true 시키고 필요 없는 것은 false 시킨다
         actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(false);            //액션바 아이콘을 업 네비게이션 형태로 표시합니다.
-        actionBar.setDisplayShowTitleEnabled(false);        //액션바에 표시되는 제목의 표시유무를 설정합니다.
-        actionBar.setDisplayShowHomeEnabled(false);            //홈 아이콘을 숨김처리합니다.
+        //액션바 아이콘을 업 네비게이션 형태로 표시
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        //액션바에 표시되는 제목의 표시유무
+        actionBar.setDisplayShowTitleEnabled(false);
+        //홈 아이콘을 숨김처리
+        actionBar.setDisplayShowHomeEnabled(false);
 
 
-        //layout을 가지고 와서 actionbar에 포팅을 시킵니다.
+        //layout을 가지고 와서 actionbar에 포팅
         LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-        View actionbar = inflater.inflate(R.layout.layout_actionbar, null);
+        View actionbar = inflater.inflate(R.layout.default_actionbar, null);
 
         actionBar.setCustomView(actionbar);
 
@@ -423,6 +417,30 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    //기본 액션바 설정
+    public void setDefaultActionBar() {
+        LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+        View actionbar = inflater.inflate(R.layout.default_actionbar, null);
+        actionBar.setCustomView(actionbar);
+    }
+
+    //기본 액션바 + back버튼 설정
+    public void setDefaultActionBarBack() {
+        LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+        View actionbar = inflater.inflate(R.layout.default_back_actionbar, null);
+        actionBar.setCustomView(actionbar);
+    }
+
+    //페이지별 타이틀 나오는 액션바 설정
+    public void setActionBar(String txt) {
+        LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+        View actionbar = inflater.inflate(R.layout.page_actionbar, null);
+        actionBar.setCustomView(actionbar);
+
+        Button actionBar2Title = (Button) findViewById(R.id.actionBar2Title);
+        actionBar2Title.setText(txt);
+    }
+
     //모든 frame 다 끄고 target만 visible
     public void showView(int target) {
         for (int i=0; i<views.size(); i++) {
@@ -433,33 +451,37 @@ public class MainActivity extends AppCompatActivity {
 
     //액션바 클릭 -> 마이페이지로 이동
     public void mypage(View v) {
+        setActionBar("마이페이지");
+
         showView(3);
 //        actionBar.setDisplayHomeAsUpEnabled(true);
-
 //        Button test = (Button) findViewById(R.id.actionBarTitle);
 //        test.setText("지니님의 마이페이지");
 //        Button actionBarLeft = (Button) findViewById(R.id.actionBarLeft);
-//        actionBarLeft.setVisibility(View.INVISIBLE);
+//        actionBarLeft.setVisibility(View.GONE);
 //        Button actionBarRight = (Button) findViewById(R.id.actionBarRight);
-//        actionBarRight.setVisibility(View.INVISIBLE);
+//        actionBarRight.setVisibility(View.GONE);
     }
 
     //마이페이지 -> '나의 스크랩' 페이지로 이동
     public void myScrap(View v) {
+        setActionBar("나의 스크랩");
         showView(4);
     }
 
     //마이페이지 -> '내가 댓글 단 공고' 페이지로 이동
     public void myReply(View v) {
+        setActionBar("내가 댓글 단 공고");
         showView(5);
 
     }
 
     //마이페이지 -> '알림 설정' 페이지로 이동
     public void pushSetting(View v) {
+        setActionBar("알림 설정");
         showView(6);
 
-        Switch alramSwitch1 = (Switch) findViewById(R.id.alramSwitch1);
+        final Switch alramSwitch1 = (Switch) findViewById(R.id.alramSwitch1);
         final Switch alramSwitch2 = (Switch) findViewById(R.id.alramSwitch2);
         final Switch alramSwitch3 = (Switch) findViewById(R.id.alramSwitch3);
 
@@ -473,6 +495,30 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     alramSwitch2.setChecked(false);
                     alramSwitch3.setChecked(false);
+                }
+            }
+        });
+
+        alramSwitch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    alramSwitch1.setChecked(true);
+                }
+                else if (alramSwitch3.isChecked() == false) {
+                    alramSwitch1.setChecked(false);
+                }
+            }
+        });
+
+        alramSwitch3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    alramSwitch1.setChecked(true);
+                }
+                else if (alramSwitch2.isChecked() == false) {
+                    alramSwitch1.setChecked(false);
                 }
             }
         });
@@ -507,10 +553,13 @@ public class MainActivity extends AppCompatActivity {
         showView(1);
         readJobEventMain();
         actionBar.show();
+        setDefaultActionBar();
     }
 
     //계열사 페이지 이동
     public void showCompany(int originCompanyNo) {
+        setActionBar("세부 계열사 선택");
+
         //중복 방지를 위한 list 초기화
         adapterCom.clear();
 
@@ -548,6 +597,8 @@ public class MainActivity extends AppCompatActivity {
 
     //'나의 관심기업/산업군' 설정 페이지로 이동
     public void favoriteSetting(View v) {
+        setActionBar("나의 관심 기업/산업군");
+
         showView(2);
 
         //관심 기업 버튼 등록

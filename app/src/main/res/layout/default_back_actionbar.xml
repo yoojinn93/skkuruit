@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp">
+
+    <!--<item-->
+        <!--android:id="@+id/menu_mypage"-->
+        <!--android:title="마이페이지"-->
+        <!--android:showAsAction="always" />-->
+    <!--<item-->
+        <!--android:id="@+id/menu_search"-->
+        <!--android:icon="@android:drawable/ic_menu_search"-->
+        <!--android:title="검색"-->
+        <!--android:showAsAction="always" />-->
+
+    <Button
+        android:id="@+id/btnAddGroupBack"
+        android:background="@drawable/arrow"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/actionBarTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_centerInParent="true"
+        android:text="skkuruit"
+        android:background="@android:color/transparent"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:textColor="#ffffff"
+        android:onClick="initStart"/>
+
+    <Button
+        android:id="@+id/actionBarRight"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="0dp"
+        android:background="@android:color/transparent"
+        android:text="검색"
+        android:textAlignment="textEnd"
+        android:textColor="#ffffff"
+        android:textSize="16dp" />
+</RelativeLayout>
