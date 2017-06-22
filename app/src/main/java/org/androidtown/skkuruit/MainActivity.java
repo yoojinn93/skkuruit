@@ -12,9 +12,11 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -456,6 +458,24 @@ public class MainActivity extends AppCompatActivity {
     //마이페이지 -> '알림 설정' 페이지로 이동
     public void pushSetting(View v) {
         showView(6);
+
+        Switch alramSwitch1 = (Switch) findViewById(R.id.alramSwitch1);
+        final Switch alramSwitch2 = (Switch) findViewById(R.id.alramSwitch2);
+        final Switch alramSwitch3 = (Switch) findViewById(R.id.alramSwitch3);
+
+        alramSwitch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    alramSwitch2.setChecked(true);
+                    alramSwitch3.setChecked(true);
+                }
+                else {
+                    alramSwitch2.setChecked(false);
+                    alramSwitch3.setChecked(false);
+                }
+            }
+        });
     }
 
     //액션바 클릭 -> 메인페이지로 이동
