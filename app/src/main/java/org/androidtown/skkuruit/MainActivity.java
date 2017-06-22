@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.firebase.database.ChildEventListener;
@@ -25,9 +26,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -107,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         cmtViewList.setAdapter(adapterCmt);
         companyViewList.setAdapter(adapterCom);
 
+        registerUser();
         readJobEvent();
     }
 
@@ -154,6 +159,43 @@ public class MainActivity extends AppCompatActivity {
               }
         });
     }
+
+    private void registerUser() {
+//        User user = new User();
+//        user.setFcmToken(FirebaseInstanceId.getInstance().getToken());
+//        databaseReference.child("user").push().setValue(user);
+//        databaseReference.child("user").child(FirebaseInstanceId.getInstance().getToken()).setValue(user);
+//        firebaseDatabase.getReference("user").child("genie").setValue(user);
+//        mFirebaseDatabase.getReference("users").child(userData.userEmailID).setValue(userData);
+
+
+        DatabaseReference userDatabase;
+        userDatabase = firebaseDatabase.getReference("users");
+        userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Iterator<DataSnapshot> child = dataSnapshot.getChildren().iterator();
+                //users의 모든 자식들의 key값과 value 값들을 iterator로 참조합니다.
+
+                while(child.hasNext())
+                {
+                    //찾고자 하는 ID값은 key로 존재하는 값
+                    if(child.next().getKey().equals(FirebaseInstanceId.getInstance().getToken()))
+                    {
+                        Toast.makeText(getApplicationContext(),"회원임!",Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+                Toast.makeText(getApplicationContext(),"회원아님!",Toast.LENGTH_LONG).show();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     //전체공고 출력 - firebase에서 채용설명회 공고 읽어와 박스 출력
     private void readJobEvent() {
