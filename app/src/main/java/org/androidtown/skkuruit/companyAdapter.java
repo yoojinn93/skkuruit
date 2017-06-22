@@ -7,6 +7,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ToggleButton;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import java.util.ArrayList;
 
 /**
@@ -14,6 +21,10 @@ import java.util.ArrayList;
  */
 
 public class companyAdapter extends BaseAdapter {
+    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    DatabaseReference userDatabase = firebaseDatabase.getReference("user");
+    DatabaseReference targetUser = userDatabase.child(FirebaseInstanceId.getInstance().getToken());
+
 
     // 아이템 데이터 리스트
     private ArrayList<company> companyList = new ArrayList<company>() ;
@@ -52,7 +63,7 @@ public class companyAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         context = parent.getContext();
         int viewType = getItemViewType(position) ;
-        company company = companyList.get(position);
+        final company company = companyList.get(position);
 
         if(convertView == null){ //새로 생성될 때만 업데이트
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -63,19 +74,58 @@ public class companyAdapter extends BaseAdapter {
         final ToggleButton spComName = (ToggleButton) convertView.findViewById(R.id.spComName);
 
         final String companyName = company.getCompanyName();
-        spComName.setText(company.getCompanyName());
+        spComName.setText(companyName);
         spComName.setTag(position);
+
+        //이미 favorite 되어있는 기업
+        targetUser.child("userFavCompany").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+                boolean checked = true;
+                if (dataSnapshot.getKey().equals(String.valueOf(company.getCompanyNo()))){
+                    spComName.setChecked(checked);
+                    spComName.setText(companyName);
+                    spComName.setTextColor(0xFFFFFFFF);
+                    spComName.setBackgroundResource(R.drawable.selected_button);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        //onclick
         spComName.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (spComName.isChecked()) {
                     spComName.setText(companyName);
                     spComName.setTextColor(0xFFFFFFFF);
                     spComName.setBackgroundResource(R.drawable.selected_button);
+                    targetUser.child("userFavCompany").child(String.valueOf(company.getCompanyNo())).setValue(true);
                 }
                 else {
                     spComName.setText(companyName);
                     spComName.setTextColor(0xFF151515);
                     spComName.setBackgroundResource(R.drawable.button);
+                    targetUser.child("userFavCompany").child(String.valueOf(company.getCompanyNo())).removeValue();
+
                 }
             }
         });

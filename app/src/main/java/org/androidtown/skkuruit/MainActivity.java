@@ -50,9 +50,10 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = firebaseDatabase.getReference();
     DatabaseReference userDatabase = firebaseDatabase.getReference("user");
+    DatabaseReference targetUser = userDatabase.child(FirebaseInstanceId.getInstance().getToken());
 
-    ListView mainViewList1, mainViewList2, allEventViewList, cmtViewList, companyViewList;
-    jobEventAdapter adapter1, adapter2, adapterAll;
+    ListView mainViewList1, mainViewList2, allEventViewList, cmtViewList, companyViewList, myReplyViewList, myScrapViewList;
+    jobEventAdapter adapter1, adapter2, adapterAll, adapterReply, adapterScrap;
     commentAdapter adapterCmt;
     companyAdapter adapterCom;
 
@@ -77,12 +78,14 @@ public class MainActivity extends AppCompatActivity {
         views.add((LinearLayout) findViewById(R.id.companyView));
         views.add((LinearLayout) findViewById(R.id.allEventView));
 
-        //for listview - 메인, 전체공고
+        //for listview
         mainViewList1 = (ListView) findViewById(R.id.mainViewList1);
         mainViewList2 = (ListView) findViewById(R.id.mainViewList2);
         allEventViewList = (ListView) findViewById(R.id.allEventViewList);
         cmtViewList = (ListView) findViewById(R.id.cmtViewList);
         companyViewList = (ListView) findViewById(R.id.companyViewList);
+        myReplyViewList = (ListView) findViewById(R.id.myReplyViewList);
+        myScrapViewList = (ListView) findViewById(R.id.myScrapViewList);
 
         //상세페이지 - 내용 부분 Header로 설정
         View header = getLayoutInflater().inflate(R.layout.spevent_header, null, false);
@@ -94,20 +97,16 @@ public class MainActivity extends AppCompatActivity {
         adapterAll = new jobEventAdapter();
         adapterCmt = new commentAdapter();
         adapterCom = new companyAdapter();
+        adapterReply = new jobEventAdapter();
+        adapterScrap = new jobEventAdapter();
 
         mainViewList1.setAdapter(adapter1);
         mainViewList2.setAdapter(adapter2);
         allEventViewList.setAdapter(adapterAll);
         cmtViewList.setAdapter(adapterCmt);
         companyViewList.setAdapter(adapterCom);
-
-//        Button startBtn = (Button) findViewById(R.id.startBtn);
-//        startBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(MainActivity.this, "start!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        myReplyViewList.setAdapter(adapterReply);
+        myScrapViewList.setAdapter(adapterScrap);
 
         //로딩페이지 - 기존 user일 경우 바로 시작
         registerCheck();
@@ -183,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                     DataSnapshot tmp = child.next(); //현재 사용자 닉네임 저장
                     if(tmp.getKey().equals(FirebaseInstanceId.getInstance().getToken())) {
                         //이미 가입한 회원일 경우 메인 페이지로 이동
-//                        initStart();
+                        initStart();
                         currentUsername = tmp.child("nickname").getValue().toString();
                         return;
                     }
@@ -361,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 EditText commentInput = (EditText) findViewById(R.id.commentInput);
 
-                Comment comment = new Comment(eventNo, "genie", commentInput.getText().toString(), getCurrentTime());
+                Comment comment = new Comment(eventNo, currentUsername, commentInput.getText().toString(), getCurrentTime());
                 databaseReference.child("comment").push().setValue(comment);
                 commentInput.setText("");
             }
@@ -603,6 +602,69 @@ public class MainActivity extends AppCompatActivity {
     public void myScrap(View v) {
         setActionBar("나의 스크랩");
         showView(4);
+
+        //공고 클릭할 때마다 초기화 필요
+        adapterScrap.clear();
+        //댓글 리스트뷰, 어댑터 만들고
+        //댓글 사이즈 1보다 크면 댓글 없다는 text invisible 처리
+
+        databaseReference.child("jobEvent").orderByChild("eventNo").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+                final jobEventItem jobEventItem = dataSnapshot.getValue(jobEventItem.class);
+
+                targetUser.child("userScrap").addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        if (dataSnapshot.getKey().equals(String.valueOf(jobEventItem.getEventNo()))){
+                            adapterScrap.addItem(jobEventItem.getEventNo(), jobEventItem.getEventTitle(), jobEventItem.getEventDate(),
+                                    jobEventItem.getEventCompanyNo(), jobEventItem.getEventLocation(), jobEventItem.getEventContent());
+                            adapterScrap.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     //마이페이지 -> '내가 댓글 단 공고' 페이지로 이동
@@ -610,6 +672,68 @@ public class MainActivity extends AppCompatActivity {
         setActionBar("내가 댓글 단 공고");
         showView(5);
 
+        //공고 클릭할 때마다 초기화 필요
+        adapterReply.clear();
+        //댓글 리스트뷰, 어댑터 만들고
+        //댓글 사이즈 1보다 크면 댓글 없다는 text invisible 처리
+
+        databaseReference.child("comment").orderByChild("cmtUser").equalTo(currentUsername).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+                Comment comment = dataSnapshot.getValue(Comment.class);
+
+                databaseReference.child("jobEvent").orderByChild("eventNo").equalTo(comment.getTargetEvent()).addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        jobEventItem jobEventItem = dataSnapshot.getValue(jobEventItem.class);
+
+                        adapterReply.addItem(jobEventItem.getEventNo(), jobEventItem.getEventTitle(), jobEventItem.getEventDate(),
+                                jobEventItem.getEventCompanyNo(), jobEventItem.getEventLocation(), jobEventItem.getEventContent());
+                        adapterReply.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     //마이페이지 -> '알림 설정' 페이지로 이동
@@ -673,6 +797,35 @@ public class MainActivity extends AppCompatActivity {
     public void showCompany(int originCompanyNo) {
         setActionBar("세부 계열사 선택");
 
+        //user 데이터 가져오기
+        final ArrayList<Integer> favComArr = new ArrayList<>();
+        targetUser.child("userFavCompany").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+                favComArr.add(Integer.parseInt(dataSnapshot.getKey()));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         //중복 방지를 위한 list 초기화
         adapterCom.clear();
 
@@ -680,7 +833,14 @@ public class MainActivity extends AppCompatActivity {
               @Override
               public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                   company company = dataSnapshot.getValue(company.class);
+                  if (favComArr.contains(company.getCompanyNo())) {
+
+//                      Toast.makeText(MainActivity.this, company.getCompanyNo(), Toast.LENGTH_SHORT).show();
+//                      adapterCom.getList().get(0);
+                  }
                   adapterCom.addItem(company.getCompanyNo(), company.getCompanyName(), company.getOriginCompanyNo());
+
+
                   adapterCom.notifyDataSetChanged();
               }
 
@@ -705,14 +865,13 @@ public class MainActivity extends AppCompatActivity {
               }
           }
         );
+
         showView(8);
     }
 
     //'나의 관심기업/산업군' 설정 페이지로 이동
     public void favoriteSetting(View v) {
         setActionBar("나의 관심 기업/산업군");
-
-        showView(2);
 
         //관심 기업 버튼 등록
         favComs.add((Button) findViewById(R.id.favCompany1));
@@ -772,26 +931,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //관심 기업 버튼 onclick -> 각 기업 계열사 페이지로 이동
-//        for (int i=0; i<favComs.size(); i++) {
-//            final int originCompanyNo = i+1;
-//            favComs.get(i).setOnClickListener(new View.OnClickListener() {
-//                public void onClick(View v) {
-//                    showCompany(originCompanyNo);
-//                }
-//            });
-//
-//            final Button targetfavCom = favComs.get(i);
-//            final int originCompanyNo = i+1;
-//            targetfavCom.setOnClickListener(new View.OnClickListener() {
-//                public void onClick(View v) {
-////                    showView(8);
-//                    showCompany(originCompanyNo);
-////                    Log.v("index", "d");
-//                }
-//            });
-//        }
-
         //관심 산업군 버튼 등록
         favBtns.add((ToggleButton) findViewById(R.id.favBtn1));
         favBtns.add((ToggleButton) findViewById(R.id.favBtn2));
@@ -803,22 +942,58 @@ public class MainActivity extends AppCompatActivity {
         favBtns.add((ToggleButton) findViewById(R.id.favBtn8));
         favBtns.add((ToggleButton) findViewById(R.id.favBtn9));
 
+        targetUser.child("userFavCategory").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+                boolean checked = true;
+                ToggleButton targetBtn = favBtns.get(Integer.parseInt(dataSnapshot.getKey())-1);
+                targetBtn.setChecked(checked);
+                targetBtn.setTextColor(0xFFFFFFFF);
+                targetBtn.setBackgroundResource(R.drawable.selected_button);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         //관심 산업군 버튼 onclick event 설정
         for (int i=0; i<favBtns.size(); i++) {
+            final int index = i+1;
             final ToggleButton targetFavBtn = favBtns.get(i);
             targetFavBtn.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     if (targetFavBtn.isChecked()) {
                         targetFavBtn.setTextColor(0xFFFFFFFF);
                         targetFavBtn.setBackgroundResource(R.drawable.selected_button);
+                        targetUser.child("userFavCategory").child(String.valueOf(index)).setValue(true);
                     }
                     else {
                         targetFavBtn.setTextColor(0xFF151515);
                         targetFavBtn.setBackgroundResource(R.drawable.button);
+                        targetUser.child("userFavCategory").child(String.valueOf(index)).removeValue();
                     }
                 }
             });
         }
+
+        showView(2);
     }
 
 
