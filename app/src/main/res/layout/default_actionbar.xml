@@ -36,8 +36,7 @@
         android:background="@android:color/transparent"
         android:textStyle="bold"
         android:textSize="20dp"
-        android:textColor="#ffffff"
-        android:onClick="initStart"/>
+        android:textColor="#ffffff"/>
 
     <Button
         android:id="@+id/actionBarRight"

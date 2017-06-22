@@ -59,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Button> favComs = new ArrayList<Button>();
     ArrayList<ToggleButton> favBtns = new ArrayList<ToggleButton>();
 
+    String currentUsername;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
         //로딩페이지 - 기존 user일 경우 바로 시작
-        registeredUserCheck();
+        registerCheck();
 
         //로딩페이지 - 신규 user 닉네임 등록
         EditText nickText = (EditText) findViewById(R.id.nickText);
@@ -168,14 +170,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void registeredUserCheck() {
-//        User user = new User();
-//        user.setFcmToken(FirebaseInstanceId.getInstance().getToken());
-//        databaseReference.child("user").push().setValue(user);
-//        databaseReference.child("user").child(FirebaseInstanceId.getInstance().getToken()).setValue(user);
-//        firebaseDatabase.getReference("user").child("genie").setValue(user);
-//        mFirebaseDatabase.getReference("users").child(userData.userEmailID).setValue(userData);
-
+    //이미 가입한 user인지 체크
+    private void registerCheck() {
         userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -184,10 +180,11 @@ public class MainActivity extends AppCompatActivity {
 
                 //찾고자 하는 토큰값은 key로 존재하는 값
                 while(child.hasNext()) {
-                    if(child.next().getKey().equals(FirebaseInstanceId.getInstance().getToken())) {
+                    DataSnapshot tmp = child.next(); //현재 사용자 닉네임 저장
+                    if(tmp.getKey().equals(FirebaseInstanceId.getInstance().getToken())) {
                         //이미 가입한 회원일 경우 메인 페이지로 이동
-//                        Toast.makeText(getApplicationContext(),"회원임!",Toast.LENGTH_LONG).show();
 //                        initStart();
+                        currentUsername = tmp.child("nickname").getValue().toString();
                         return;
                     }
                 }
@@ -199,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //닉네임 중복 체크
     private void nicknameCheck() {
         final EditText nickText = (EditText) findViewById(R.id.nickText);
         final TextView nickDescription = (TextView) findViewById(R.id.nickDescription);
@@ -206,11 +204,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> child = dataSnapshot.getChildren().iterator();
+                Button startBtn = (Button) findViewById(R.id.startBtn);
 
                 while(child.hasNext()) {
                     if (child.next().child("nickname").getValue().toString().equals(nickText.getText().toString())) {
                         nickDescription.setText("! 이미 있는 닉네임입니다!");
                         nickDescription.setTextColor(0xEEE40808);
+
+                        //시작하기 버튼 unable 상태로 초기화(ok된 후 중복되는 닉네임 입력했을 경우 처리)
+                        startBtn.setBackgroundResource(R.drawable.gray_box);
+                        startBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                            }
+                        });
+
                         databaseReference.removeEventListener(this);
                         return;
                     }
@@ -220,12 +228,12 @@ public class MainActivity extends AppCompatActivity {
                 databaseReference.removeEventListener(this);
 
                 //시작하기 버튼 활성화
-                Button startBtn = (Button) findViewById(R.id.startBtn);
                 startBtn.setBackgroundResource(R.drawable.selected_button);
                 startBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //makeUser();
+                        currentUsername = nickText.getText().toString();
+                        registerUser();
                         initStart();
                     }
                 });
@@ -238,6 +246,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //user 등록
+    private void registerUser() {
+        final EditText nickText = (EditText) findViewById(R.id.nickText);
+
+        User user = new User();
+        user.setFcmToken(FirebaseInstanceId.getInstance().getToken());
+        user.setNickname(nickText.getText().toString());
+
+//        databaseReference.child("user").push().setValue(user);
+        databaseReference.child("user").child(FirebaseInstanceId.getInstance().getToken()).setValue(user);
+//        firebaseDatabase.getReference("user").child("genie").setValue(user);
+//        mFirebaseDatabase.getReference("users").child(userData.userEmailID).setValue(userData);
+
+    }
 
     //전체공고 출력 - firebase에서 채용설명회 공고 읽어와 박스 출력
     private void readJobEvent() {
@@ -491,6 +513,15 @@ public class MainActivity extends AppCompatActivity {
 
         actionBar.setCustomView(actionbar);
 
+        //액션바 타이틀 누르면 메인으로 돌아가도록
+        Button actionBarTitle = (Button) findViewById(R.id.actionBarTitle);
+        actionBarTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initStart();
+            }
+        });
+
         //액션바 양쪽 공백 없애기
 //        Toolbar parent = (Toolbar)actionbar.getParent();
 //        parent.setContentInsetsAbsolute(0,0);
@@ -506,6 +537,14 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
         View actionbar = inflater.inflate(R.layout.default_actionbar, null);
         actionBar.setCustomView(actionbar);
+
+        Button actionBarTitle = (Button) findViewById(R.id.actionBarTitle);
+        actionBarTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initStart();
+            }
+        });
     }
 
     //기본 액션바 + back버튼 설정
@@ -513,6 +552,14 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
         View actionbar = inflater.inflate(R.layout.default_back_actionbar, null);
         actionBar.setCustomView(actionbar);
+
+        Button actionBarTitle = (Button) findViewById(R.id.actionBarTitle);
+        actionBarTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initStart();
+            }
+        });
     }
 
     //페이지별 타이틀 나오는 액션바 설정
@@ -523,6 +570,12 @@ public class MainActivity extends AppCompatActivity {
 
         Button actionBar2Title = (Button) findViewById(R.id.actionBar2Title);
         actionBar2Title.setText(txt);
+        actionBar2Title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initStart();
+            }
+        });
     }
 
     //모든 frame 다 끄고 target만 visible
@@ -535,8 +588,7 @@ public class MainActivity extends AppCompatActivity {
 
     //액션바 클릭 -> 마이페이지로 이동
     public void mypage(View v) {
-        setActionBar("마이페이지");
-
+        setActionBar(currentUsername+"님의 마이페이지");
         showView(3);
 //        actionBar.setDisplayHomeAsUpEnabled(true);
 //        Button test = (Button) findViewById(R.id.actionBarTitle);
