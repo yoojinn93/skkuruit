@@ -47,7 +47,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:ems="10"
+                        android:padding="8dp"
+                        android:background="@null"
                         android:inputType="textPersonName"
                         android:textSize="15dp"
                         android:textColor="@color/mainColor"
@@ -746,8 +747,8 @@
             android:paddingTop="15dp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:paddingBottom="0dp">
-            >
+            android:paddingBottom="10dp">
+
             //댓글 하나씩 출력
             <ListView
                 android:id="@+id/cmtViewList"
