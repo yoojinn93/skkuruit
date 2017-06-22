@@ -85,8 +85,7 @@
                     android:background="@drawable/selected_button"
                     android:text="시작하기"
                     android:textColor="#ffffff"
-                    android:textSize="17dp"
-                    android:onClick="initStart"/>
+                    android:textSize="17dp"/>
             </LinearLayout>
         </LinearLayout>
 

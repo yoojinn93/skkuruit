@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = firebaseDatabase.getReference();
+    DatabaseReference userDatabase = firebaseDatabase.getReference("user");
+
     ListView mainViewList1, mainViewList2, allEventViewList, cmtViewList, companyViewList;
     jobEventAdapter adapter1, adapter2, adapterAll;
     commentAdapter adapterCmt;
@@ -73,19 +75,6 @@ public class MainActivity extends AppCompatActivity {
         views.add((LinearLayout) findViewById(R.id.specificView));
         views.add((LinearLayout) findViewById(R.id.companyView));
         views.add((LinearLayout) findViewById(R.id.allEventView));
-
-        EditText nickText = (EditText) findViewById(R.id.nickText);
-        Button nickCheckBtn = (Button) findViewById(R.id.nickCheckBtn);
-        nickCheckBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextView nickDescription = (TextView) findViewById(R.id.nickDescription);
-                nickDescription.setText("사용 가능한 닉네임입니다.");
-//                nickDescription.setText("이미 있는 닉네임입니다.");
-            }
-        });
-
-
 
         //for listview - 메인, 전체공고
         mainViewList1 = (ListView) findViewById(R.id.mainViewList1);
@@ -111,7 +100,18 @@ public class MainActivity extends AppCompatActivity {
         cmtViewList.setAdapter(adapterCmt);
         companyViewList.setAdapter(adapterCom);
 
-        registerUser();
+
+        //로딩페이지 - 신규 user 닉네임 등록
+        EditText nickText = (EditText) findViewById(R.id.nickText);
+        Button nickCheckBtn = (Button) findViewById(R.id.nickCheckBtn);
+        nickCheckBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nicknameCheck();
+            }
+        });
+
+        registerUserCheck();
         readJobEvent();
     }
 
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void registerUser() {
+    private void registerUserCheck() {
 //        User user = new User();
 //        user.setFcmToken(FirebaseInstanceId.getInstance().getToken());
 //        databaseReference.child("user").push().setValue(user);
@@ -169,31 +169,82 @@ public class MainActivity extends AppCompatActivity {
 //        mFirebaseDatabase.getReference("users").child(userData.userEmailID).setValue(userData);
 
 
-        DatabaseReference userDatabase;
-        userDatabase = firebaseDatabase.getReference("users");
+//        DatabaseReference userDatabase;
+//        userDatabase = firebaseDatabase.getReference("user");
         userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                //users의 모든 자식들의 key값과 value 값들을 iterator로 참조
                 Iterator<DataSnapshot> child = dataSnapshot.getChildren().iterator();
-                //users의 모든 자식들의 key값과 value 값들을 iterator로 참조합니다.
 
-                while(child.hasNext())
-                {
-                    //찾고자 하는 ID값은 key로 존재하는 값
-                    if(child.next().getKey().equals(FirebaseInstanceId.getInstance().getToken()))
-                    {
-                        Toast.makeText(getApplicationContext(),"회원임!",Toast.LENGTH_LONG).show();
+                //찾고자 하는 토큰값은 key로 존재하는 값
+                while(child.hasNext()) {
+                    if(child.next().getKey().equals(FirebaseInstanceId.getInstance().getToken())) {
+                        //이미 가입한 회원일 경우 메인 페이지로 이동
+//                        Toast.makeText(getApplicationContext(),"회원임!",Toast.LENGTH_LONG).show();
+//                        initStart();
                         return;
                     }
                 }
-                Toast.makeText(getApplicationContext(),"회원아님!",Toast.LENGTH_LONG).show();
+                //가입한 회원 아니면 닉네임 입력 진행
+//                Toast.makeText(getApplicationContext(),"회원아님!",Toast.LENGTH_LONG).show();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
+    }
+
+    private void nicknameCheck() {
+        final EditText nickText = (EditText) findViewById(R.id.nickText);
+        final TextView nickDescription = (TextView) findViewById(R.id.nickDescription);
+        userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> child = dataSnapshot.getChildren().iterator();
+
+                while(child.hasNext()) {
+                    if (child.next().child("nickname").getValue().toString().equals(nickText.getText().toString())) {
+                        Toast.makeText(getApplicationContext(), "존재하는 닉넴", Toast.LENGTH_LONG).show();
+                        nickDescription.setText("이미 있는 닉네임입니다!");
+                        databaseReference.removeEventListener(this);
+                        return;
+                    }
+                }
+                //makeUser();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+//        ValueEventListener checkRegister = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+////                User user = dataSnapshot.getValue(User.class);
+//                Iterator<DataSnapshot> child = dataSnapshot.getChildren().iterator();
+//
+//                while(child.hasNext()) { //중복 유무 확인
+//                    Toast.makeText(getApplicationContext(), child.next().child("nickname").getValue().toString(), Toast.LENGTH_LONG).show();
+//
+////                    if(child.next().child("nickname").getValue().equals("genie")) {
+////                        Toast.makeText(getApplicationContext(), "존재하는 닉네임 입니다.", Toast.LENGTH_LONG).show();
+////
+////                    }
+////                    if (nickText.getText().toString().equals(child.next()) {
+////                        Toast.makeText(getApplicationContext(), "존재하는 아이디 입니다.", Toast.LENGTH_LONG).show();
+////                        databaseReference.removeEventListener(this);
+////                        return;
+////                    }
+//                }
+////                makeNewId();
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//            }
+//        };
     }
 
 
@@ -566,32 +617,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //액션바 클릭 -> 메인페이지로 이동
-
-//    menu select
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int curId = item.getItemId();
-//        views.add((LinearLayout) findViewById(R.id.mypageView));
-//
-//        switch(curId) {
-//            case R.id.menu_mypage:
-//                invisibleAll();
-//                views.get(3).setVisibility(View.VISIBLE);
-//                Toast.makeText(this, "마이페이지 선택", Toast.LENGTH_SHORT).show();
-//                break;
-//            case R.id.menu_search:
-//                Toast.makeText(this, "검색 선택", Toast.LENGTH_SHORT).show();
-//                break;
-//            default:
-//                break;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
     //닉네임 설정 후 '시작하기' 버튼 누르면 메인페이지로 이동
     //액션바 클릭 -> 메인페이지로 이동
-    public void initStart(View v) {
+    public void initStart() {
         showView(1);
         readJobEventMain();
         actionBar.show();
