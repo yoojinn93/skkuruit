@@ -44,10 +44,12 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = firebaseDatabase.getReference();
-    ListView mainViewList1, mainViewList2, allEventViewList, cmtViewList;
+    ListView mainViewList1, mainViewList2, allEventViewList, cmtViewList, companyViewList;
     jobEventAdapter adapter1, adapter2, adapterAll;
     commentAdapter adapterCmt;
+    companyAdapter adapterCom;
 
+    ArrayList<Button> favComs = new ArrayList<Button>();
     ArrayList<ToggleButton> favBtns = new ArrayList<ToggleButton>();
     //0 : 삼성
     //1 : 현대차
@@ -87,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         mainViewList2 = (ListView) findViewById(R.id.mainViewList2);
         allEventViewList = (ListView) findViewById(R.id.allEventViewList);
         cmtViewList = (ListView) findViewById(R.id.cmtViewList);
+        companyViewList = (ListView) findViewById(R.id.companyViewList);
 
         //상세페이지 - 내용 부분 Header로 설정
         View header = getLayoutInflater().inflate(R.layout.spevent_header, null, false);
@@ -97,11 +100,13 @@ public class MainActivity extends AppCompatActivity {
         adapter2 = new jobEventAdapter();
         adapterAll = new jobEventAdapter();
         adapterCmt = new commentAdapter();
+        adapterCom = new companyAdapter();
 
         mainViewList1.setAdapter(adapter1);
         mainViewList2.setAdapter(adapter2);
         allEventViewList.setAdapter(adapterAll);
         cmtViewList.setAdapter(adapterCmt);
+        companyViewList.setAdapter(adapterCom);
 
         readJobEvent();
 //        getCompany();
@@ -484,9 +489,124 @@ public class MainActivity extends AppCompatActivity {
         actionBar.show();
     }
 
+    //계열사 페이지 이동
+    public void showCompany(int originCompanyNo) {
+        //중복 방지를 위한 list 초기화
+        adapterCom.clear();
+
+        databaseReference.child("company").orderByChild("originCompanyNo").equalTo(originCompanyNo).addChildEventListener(new ChildEventListener() {
+              @Override
+              public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                  company company = dataSnapshot.getValue(company.class);
+                  adapterCom.addItem(company.getCompanyNo(), company.getCompanyName(), company.getOriginCompanyNo());
+                  adapterCom.notifyDataSetChanged();
+              }
+
+              @Override
+              public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+              }
+
+              @Override
+              public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+              }
+
+              @Override
+              public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+              }
+
+              @Override
+              public void onCancelled(DatabaseError databaseError) {
+
+              }
+          }
+        );
+        showView(8);
+    }
+
     //'나의 관심기업/산업군' 설정 페이지로 이동
     public void favoriteSetting(View v) {
         showView(2);
+
+        //관심 기업 버튼 등록
+        favComs.add((Button) findViewById(R.id.favCompany1));
+        favComs.add((Button) findViewById(R.id.favCompany2));
+        favComs.add((Button) findViewById(R.id.favCompany3));
+        favComs.add((Button) findViewById(R.id.favCompany4));
+        favComs.add((Button) findViewById(R.id.favCompany5));
+        favComs.add((Button) findViewById(R.id.favCompany6));
+        favComs.add((Button) findViewById(R.id.favCompany7));
+        favComs.add((Button) findViewById(R.id.favCompany8));
+        favComs.add((Button) findViewById(R.id.favCompany9));
+
+        //관심 기업 버튼 onclick -> 각 기업 계열사 페이지로 이동
+        favComs.get(0).setOnClickListener(new View.OnClickListener() {
+              public void onClick(View v) {
+                  showCompany(1);
+              }
+        });
+        favComs.get(1).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showCompany(2);
+            }
+        });
+        favComs.get(2).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showCompany(3);
+            }
+        });
+        favComs.get(3).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showCompany(4);
+            }
+        });
+        favComs.get(4).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showCompany(5);
+            }
+        });
+        favComs.get(5).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showCompany(6);
+            }
+        });
+        favComs.get(6).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showCompany(7);
+            }
+        });
+        favComs.get(7).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showCompany(8);
+            }
+        });
+        favComs.get(8).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showCompany(9);
+            }
+        });
+
+        //관심 기업 버튼 onclick -> 각 기업 계열사 페이지로 이동
+//        for (int i=0; i<favComs.size(); i++) {
+//            final int originCompanyNo = i+1;
+//            favComs.get(i).setOnClickListener(new View.OnClickListener() {
+//                public void onClick(View v) {
+//                    showCompany(originCompanyNo);
+//                }
+//            });
+//
+//            final Button targetfavCom = favComs.get(i);
+//            final int originCompanyNo = i+1;
+//            targetfavCom.setOnClickListener(new View.OnClickListener() {
+//                public void onClick(View v) {
+////                    showView(8);
+//                    showCompany(originCompanyNo);
+////                    Log.v("index", "d");
+//                }
+//            });
+//        }
 
         //관심 산업군 버튼 등록
         favBtns.add((ToggleButton) findViewById(R.id.favBtn1));

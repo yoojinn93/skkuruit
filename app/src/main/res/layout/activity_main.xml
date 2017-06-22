@@ -453,50 +453,47 @@
                                 android:textStyle="bold"
                                 android:layout_marginBottom="5dp"/>
 
-                            <!--<LinearLayout-->
-                                <!--android:layout_width="match_parent"-->
-                                <!--android:layout_height="match_parent"-->
-                                <!--android:orientation="horizontal">-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal">
 
-                                <!--<ToggleButton-->
-                                    <!--android:id="@+id/favBtn1"-->
-                                    <!--android:layout_width="wrap_content"-->
-                                    <!--android:layout_height="wrap_content"-->
-                                    <!--android:layout_margin="3dp"-->
-                                    <!--android:layout_weight="1"-->
-                                    <!--android:background="@drawable/button"-->
-                                    <!--android:textColor="@color/mainColor"-->
-                                    <!--android:textSize="15dp"-->
-                                    <!--android:textStyle="bold"-->
-                                    <!--android:textOff="삼성"-->
-                                    <!--android:textOn="삼성" />-->
+                                <Button
+                                    android:id="@+id/favCompany1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="3dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/button"
+                                    android:textColor="@color/mainColor"
+                                    android:textSize="15dp"
+                                    android:textStyle="bold"
+                                    android:text="삼성" />
 
-                                <!--<ToggleButton-->
-                                    <!--android:id="@+id/favBtn2"-->
-                                    <!--android:layout_width="wrap_content"-->
-                                    <!--android:layout_height="wrap_content"-->
-                                    <!--android:layout_margin="3dp"-->
-                                    <!--android:layout_weight="1"-->
-                                    <!--android:background="@drawable/button"-->
-                                    <!--android:textColor="@color/mainColor"-->
-                                    <!--android:textSize="15dp"-->
-                                    <!--android:textStyle="bold"-->
-                                    <!--android:textOff="현대차"-->
-                                    <!--android:textOn="현대차" />-->
+                                <Button
+                                    android:id="@+id/favCompany2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="3dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/button"
+                                    android:textColor="@color/mainColor"
+                                    android:textSize="15dp"
+                                    android:textStyle="bold"
+                                    android:text="현대차" />
 
-                                <!--<ToggleButton-->
-                                    <!--android:id="@+id/favBtn3"-->
-                                    <!--android:layout_width="wrap_content"-->
-                                    <!--android:layout_height="wrap_content"-->
-                                    <!--android:layout_margin="3dp"-->
-                                    <!--android:layout_weight="1"-->
-                                    <!--android:background="@drawable/button"-->
-                                    <!--android:textColor="@color/mainColor"-->
-                                    <!--android:textSize="15dp"-->
-                                    <!--android:textStyle="bold"-->
-                                    <!--android:textOff="SK"-->
-                                    <!--android:textOn="SK" />-->
-                            <!--</LinearLayout>-->
+                                <Button
+                                    android:id="@+id/favCompany3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="3dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/button"
+                                    android:textColor="@color/mainColor"
+                                    android:textSize="15dp"
+                                    android:textStyle="bold"
+                                    android:text="SK" />
+                            </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -504,7 +501,7 @@
                                 android:orientation="horizontal">
 
                                 <Button
-                                    android:id="@+id/button10"
+                                    android:id="@+id/favCompany4"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="3dp"
@@ -516,7 +513,7 @@
                                     android:text="LG" />
 
                                 <Button
-                                    android:id="@+id/button9"
+                                    android:id="@+id/favCompany5"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="3dp"
@@ -528,7 +525,7 @@
                                     android:text="롯데" />
 
                                 <Button
-                                    android:id="@+id/button8"
+                                    android:id="@+id/favCompany6"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="3dp"
@@ -546,7 +543,7 @@
                                 android:orientation="horizontal">
 
                                 <Button
-                                    android:id="@+id/button10"
+                                    android:id="@+id/favCompany7"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="3dp"
@@ -558,7 +555,7 @@
                                     android:text="GS" />
 
                                 <Button
-                                    android:id="@+id/button9"
+                                    android:id="@+id/favCompany8"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="3dp"
@@ -570,7 +567,7 @@
                                     android:text="한화" />
 
                                 <Button
-                                    android:id="@+id/button8"
+                                    android:id="@+id/favCompany9"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="3dp"
@@ -1096,37 +1093,11 @@
             android:orientation="vertical"
             android:visibility="invisible">
 
-            <LinearLayout
+            <ListView
+                android:id="@+id/companyViewList"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="15dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <Button
-                            android:id="@+id/button10"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="3dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/button"
-                            android:textSize="15dp"
-                            android:textColor="@color/mainColor"
-                            android:text="삼성" />
-                    </LinearLayout>
-
-                </LinearLayout>
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:padding="15dp"/>
         </LinearLayout>
 
         // 마이페이지 page
