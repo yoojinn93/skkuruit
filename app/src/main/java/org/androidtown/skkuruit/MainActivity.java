@@ -326,17 +326,53 @@ public class MainActivity extends AppCompatActivity {
         getComment(eventNo);
 
         //star
+        final int targetNo = adapter.getList().get(position).getEventNo();
         final ToggleButton scrapBtn2 = (ToggleButton) findViewById(R.id.scrapBtn2);
         scrapBtn2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.v("scrap", "click");
                 if (scrapBtn2.isChecked()) {
                     scrapBtn2.setBackgroundResource(R.drawable.star);
+                    targetUser.child("userScrap").child(String.valueOf(targetNo)).setValue(true);
                 } else {
                     scrapBtn2.setBackgroundResource(R.drawable.unstar);
+                    targetUser.child("userScrap").child(String.valueOf(targetNo)).removeValue();
+
                 }
             }
         });
+
+        targetUser.child("userScrap").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+                boolean checked = true;
+                if (dataSnapshot.getKey().equals(String.valueOf(targetNo))){
+                    scrapBtn2.setChecked(checked);
+                    scrapBtn2.setBackgroundResource(R.drawable.star);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         showView(7);
         writeCmt(eventNo);
