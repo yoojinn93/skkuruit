@@ -2,17 +2,9 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
-
-    <!--<item-->
-        <!--android:id="@+id/menu_mypage"-->
-        <!--android:title="마이페이지"-->
-        <!--android:showAsAction="always" />-->
-    <!--<item-->
-        <!--android:id="@+id/menu_search"-->
-        <!--android:icon="@android:drawable/ic_menu_search"-->
-        <!--android:title="검색"-->
-        <!--android:showAsAction="always" />-->
+    android:layout_height="?attr/actionBarSize"
+    android:orientation="horizontal"
+    android:background="@color/bgColor">
 
     <Button
         android:id="@+id/actionBarLeft"
@@ -23,7 +15,7 @@
         android:background="@android:color/transparent"
         android:text="마이페이지"
         android:textAlignment="textStart"
-        android:textColor="#ffffff"
+        android:textColor="@color/mainColor"
         android:textSize="16dp"
         android:onClick="mypage"/>
 
@@ -36,7 +28,7 @@
         android:background="@android:color/transparent"
         android:textStyle="bold"
         android:textSize="20dp"
-        android:textColor="#ffffff"/>
+        android:textColor="@color/mainColor"/>
 
     <Button
         android:id="@+id/actionBarRight"
@@ -48,6 +40,6 @@
         android:background="@android:color/transparent"
         android:text="검색"
         android:textAlignment="textEnd"
-        android:textColor="#ffffff"
+        android:textColor="@color/mainColor"
         android:textSize="16dp" />
 </RelativeLayout>

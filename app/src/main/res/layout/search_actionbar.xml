@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:orientation="horizontal"
+    android:background="@color/bgColor">
+    <!--<Button-->
+        <!--android:id="@+id/btnAddGroupBack"-->
+        <!--android:background="@drawable/arrow"-->
+        <!--android:layout_width="35dp"-->
+        <!--android:layout_height="35dp"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true" />-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/white_box"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:paddingRight="7dp"
+        android:paddingLeft="7dp"
+        android:layout_gravity="center_horizontal|center_vertical">
+        <Button
+            android:id="@+id/btnAddGroupBack"
+            android:background="@drawable/search"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+        <EditText
+            android:id="@+id/actionBarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/white_box"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            android:textColor="@color/mainColor"
+            android:hint="회사명으로 검색해보세요!"
+            android:layout_marginLeft="5dp"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:background="@android:color/transparent"
+            android:text="검색"
+            android:textAlignment="textEnd"
+            android:textColor="@color/mainColor"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/actionBarEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="2dp"
+        android:background="@android:color/transparent"
+        android:text="취소"
+        android:textAlignment="textEnd"
+        android:textColor="#ffffff"
+        android:textSize="16dp" />
+</LinearLayout>

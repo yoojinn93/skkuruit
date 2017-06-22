@@ -290,7 +290,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:padding="12dp"
-                    android:text="-학점"
+                    android:text="연관 채용공고가 없습니다!"
                     android:textColor="@color/mainColor"
                     android:textSize="15dp" />
             </LinearLayout>

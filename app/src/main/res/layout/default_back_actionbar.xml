@@ -2,7 +2,9 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="?attr/actionBarSize"
+    android:orientation="horizontal"
+    android:background="@color/bgColor">
 
     <!--<item-->
         <!--android:id="@+id/menu_mypage"-->
@@ -32,7 +34,7 @@
         android:background="@android:color/transparent"
         android:textStyle="bold"
         android:textSize="20dp"
-        android:textColor="#ffffff"
+        android:textColor="@color/mainColor"
         android:onClick="initStart"/>
 
     <Button
@@ -45,6 +47,6 @@
         android:background="@android:color/transparent"
         android:text="검색"
         android:textAlignment="textEnd"
-        android:textColor="#ffffff"
+        android:textColor="@color/mainColor"
         android:textSize="16dp" />
 </RelativeLayout>

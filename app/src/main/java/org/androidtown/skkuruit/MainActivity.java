@@ -1,5 +1,6 @@
 package org.androidtown.skkuruit;
 
+import android.graphics.drawable.ColorDrawable;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
@@ -61,11 +62,15 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<ToggleButton> favBtns = new ArrayList<ToggleButton>();
 
     String currentUsername;
+    int backActionbar; //0:default, 1:back
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //액션바 색상 변경
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xFFAFAFAF));
 
         views.add((LinearLayout) findViewById(R.id.loadView));
         views.add((LinearLayout) findViewById(R.id.mainView));
@@ -521,6 +526,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //검색 액션바로 변경
+        Button actionBarRight = (Button) findViewById(R.id.actionBarRight);
+        actionBarRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backActionbar = 0;
+                setSearchActionBar();
+            }
+        });
+
         //액션바 양쪽 공백 없애기
 //        Toolbar parent = (Toolbar)actionbar.getParent();
 //        parent.setContentInsetsAbsolute(0,0);
@@ -544,6 +559,16 @@ public class MainActivity extends AppCompatActivity {
                 initStart();
             }
         });
+
+        //검색 액션바로 변경
+        Button actionBarRight = (Button) findViewById(R.id.actionBarRight);
+        actionBarRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backActionbar = 0;
+                setSearchActionBar();
+            }
+        });
     }
 
     //기본 액션바 + back버튼 설정
@@ -557,6 +582,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 initStart();
+            }
+        });
+
+        //검색 액션바로 변경
+        Button actionBarRight = (Button) findViewById(R.id.actionBarRight);
+        actionBarRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backActionbar = 1;
+                setSearchActionBar();
             }
         });
     }
@@ -573,6 +608,23 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 initStart();
+            }
+        });
+    }
+
+    //검색 액션바 설정
+    public void setSearchActionBar() {
+        LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+        View actionbar = inflater.inflate(R.layout.search_actionbar, null);
+        actionBar.setCustomView(actionbar);
+
+        //검색 액션바 취소
+        Button actionBarEnd = (Button) findViewById(R.id.actionBarEnd);
+        actionBarEnd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (backActionbar == 0) setDefaultActionBar();
+                else setDefaultActionBarBack();
             }
         });
     }
